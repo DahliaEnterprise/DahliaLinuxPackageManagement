@@ -1,0 +1,3 @@
+dep:gcc-6-base:(= 6.3.0-18+deb9u1)
+dep:libc6:(>= 2.14)
+dep:libstdc++6:(>= 5.2)

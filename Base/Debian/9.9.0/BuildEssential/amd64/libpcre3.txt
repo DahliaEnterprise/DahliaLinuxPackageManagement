@@ -1,0 +1,2 @@
+dep:multiarch-support
+dep:libc6:(>=2.14)

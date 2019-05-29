@@ -1,0 +1,7 @@
+dep:gcc-6-base:(=6.3.0-18+deb9u1)
+dep:libc6:(>=2.14)
+dep:libgmp10:(>=2:5.0.1~)
+dep:libisl15:(>=0.15)
+dep:libmpc3
+dep:libmpfr4:(>=3.1.3)
+dep:zlib1g:(>=1:1.1.4)
