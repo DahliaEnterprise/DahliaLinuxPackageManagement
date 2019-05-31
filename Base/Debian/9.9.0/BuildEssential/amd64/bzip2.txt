@@ -1,2 +1,2 @@
-dep:libbz2-1.0:(=1.0.6-8.1)
-dep:libc6:(>=2.14)
+libbz2-1.0
+libc6

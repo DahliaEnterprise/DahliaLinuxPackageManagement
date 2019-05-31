@@ -1,8 +1,8 @@
-dep:binutils
-dep:bzip2
-dep:libdpkg-perl:(=1.18.25)
-dep:make
-dep:patch:(>=2.7)
-dep:perl
-dep:tar:(>=1.28-1)
-dep:xz-utils
+binutils
+bzip2
+libdpkg-perl
+make
+patch
+perl
+tar
+xz-utils

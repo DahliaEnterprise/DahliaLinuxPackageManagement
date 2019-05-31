@@ -1,3 +1,3 @@
-dep:libc-dev-bin (= 2.24-11+deb9u4)
-dep:libc6 (= 2.24-11+deb9u4)
-dep:linux-libc-dev (>= 4.9.130-2)
+libc-dev-bin
+libc6
+linux-libc-dev

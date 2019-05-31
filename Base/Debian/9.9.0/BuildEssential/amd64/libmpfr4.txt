@@ -1,2 +1,2 @@
-dep:libc6:(>= 2.14)
-dep:libgmp10
+libc6
+libgmp10

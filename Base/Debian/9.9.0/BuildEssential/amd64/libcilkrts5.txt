@@ -1,5 +1,5 @@
-dep:gcc-6-base(= 6.3.0-18+deb9u1)
-dep:libc6(>= 2.14)[amd64]
-dep:libc6(>= 2.3.6-6~)[i386]
-dep:libgcc1(>= 1:3.0)
-dep:libstdc++6(>= 4.1.1)
+gcc-6-base
+libc6
+libc6
+libgcc1
+libstdc++6

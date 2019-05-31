@@ -1,2 +1,2 @@
-dep:libc6:(>=2.14)
-dep:zlib1g 
+libc6
+zlib1g 

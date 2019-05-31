@@ -1,2 +1,2 @@
-dep:dpkg:(>=1.17.17)
-dep:libc6:(>=2.23)
+dpkg
+libc6

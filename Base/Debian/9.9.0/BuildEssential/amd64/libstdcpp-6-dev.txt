@@ -1,4 +1,4 @@
-dep:gcc-6-base(= 6.3.0-18+deb9u1)
-dep:libc6-dev(>= 2.13-5)
-dep:libgcc-6-dev(= 6.3.0-18+deb9u1)
-dep:libstdc++6(>= 6.3.0-18+deb9u1)
+gcc-6-base
+libc6-dev
+libgcc-6-dev
+libstdc++6

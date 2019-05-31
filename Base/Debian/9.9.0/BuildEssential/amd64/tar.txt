@@ -1,3 +1,3 @@
-dep:libacl1:(>=2.2.51-8)
-dep:libc6:(>=2.17)
-dep:libselinux1:(>= 1.32)
+libacl1
+libc6
+libselinux1

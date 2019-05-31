@@ -1,2 +1,2 @@
-dep:libc6:(>=2.17)
-dep:libpcre3
+libc6
+libpcre3

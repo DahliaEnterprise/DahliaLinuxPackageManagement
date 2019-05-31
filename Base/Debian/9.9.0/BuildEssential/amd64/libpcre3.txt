@@ -1,2 +1,2 @@
-dep:multiarch-support
-dep:libc6:(>=2.14)
+multiarch-support
+libc6

@@ -1,5 +1,5 @@
-dep:dpkg-dev:(>=1.17.11)
-dep:g++:(>=4:6.3)
-dep:libc6-dev
-dep:gcc
-dep:make
+dpkg-dev
+g++
+libc6-dev
+gcc
+make

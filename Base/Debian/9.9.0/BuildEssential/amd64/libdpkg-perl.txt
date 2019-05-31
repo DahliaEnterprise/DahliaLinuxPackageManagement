@@ -1,2 +1,2 @@
-dep:dpkg:(>=1.18.11)
-dep:perl
+dpkg
+perl

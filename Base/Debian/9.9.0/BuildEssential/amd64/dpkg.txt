@@ -1,6 +1,6 @@
-dep:libbz2-1.0
-dep:libc6:(>=2.14)
-dep:liblzma5(>=5.2.2)
-dep:libselinux1(>=2.3)
-dep:zlib1g(>=1:1.1.4)
-dep:tar(>=1.28-1)
+libbz2-1.0
+libc6
+liblzma5
+libselinux1
+zlib1g
+tar
