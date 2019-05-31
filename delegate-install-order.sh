@@ -6,8 +6,12 @@ fileDirectoryEntryBuildOrder=$debianPackageDirectoryLocation$entryBuildOrder
 
 #Entry Build Order Loop
 readarray buildOrderItems < $fileDirectoryEntryBuildOrder                                         
-
-for buildOrderItem in "${buildOrderItems[@]}";do                                                      
-	echo $buildOrderItem                             
+filetype=".txt"
+for buildOrderItem in "${buildOrderItems[@]}";do
+	trimmedBuildOrderItem=$(echo $buildOrderItem | xargs)
+	buildOrderItemPrerequisite="${debianPackageDirectoryLocation}${trimmedBuildOrderItem}${filetype}"
+	#echo $buildOrderItemPrerequisite	
+	line=$(head -n 1 $buildOrderItemPrerequisite)
+	echo $line
 done 
 
