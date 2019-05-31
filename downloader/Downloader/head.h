@@ -3,11 +3,11 @@
 
 #include <QObject>
 #include <QDebug>
-#include <QNetworkRequest>
-#include <QNetworkReply>
-#include <QNetworkAccessManager>
-#include <QUrl>
-#include <QDesktopServices>
+#include <QDir>
+#include <QDirIterator>
+#include <QFile>
+#include <QProcess>
+#include <QTimer>
 class head : public QObject
 {
     Q_OBJECT
@@ -16,14 +16,16 @@ public:
     void start();
 
 private:
-    QNetworkAccessManager* manager;
+    QProcess* process;
+    QString wgetExecutableLocation;
+    QDirIterator* downloadSourceFiles;
 
 signals:
 
 public slots:
 
 private slots:
-    void downloadFinished(QNetworkReply *reply);
+    void eventLoop();
 };
 
 #endif // HEAD_H

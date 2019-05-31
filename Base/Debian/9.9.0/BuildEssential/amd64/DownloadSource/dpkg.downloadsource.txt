@@ -1,2 +1,1 @@
-North America
 http://http.us.debian.org/debian/pool/main/d/dpkg/dpkg_1.18.25_amd64.deb
