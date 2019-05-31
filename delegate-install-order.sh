@@ -5,11 +5,9 @@ entryBuildOrder="BuildEssential_amd64.txt"
 fileDirectoryEntryBuildOrder=$debianPackageDirectoryLocation$entryBuildOrder
 
 #Entry Build Order Loop
-readarray buildOrderItem < $fileDirectoryEntryBuildOrder                                         
+readarray buildOrderItems < $fileDirectoryEntryBuildOrder                                         
 
-for row in "${buildOrderItem[@]}";do                                                      
-  row_array=(${row})                                                            
-  first=${row_array[0]}                                                         
-  echo ${first}                                                                 
+for buildOrderItem in "${buildOrderItems[@]}";do                                                      
+	echo $buildOrderItem                             
 done 
 
