@@ -31,15 +31,14 @@ while $continueDefiningBreadcrumbDepth;do
 	
 	echo $currentPrerequisiteLevelFirstLine
 
-	#End while loop if currentPrerequisiteLevelFirstLine is empty/blank
 	stringLength=${#currentPrerequisiteLevelFirstLine}
 	if [[ $stringLength -eq 0 ]]; then
+		#End while loop if currentPrerequisiteLevelFirstLine is empty/blank
 		continueDefiningBreadcrumbDepth=false
+	else
+		#Increment breadcrumb depth index
+		((breadcrumbDepthIndex = breadcrumbDepthIndex+1))
 	fi
-
-	#Increment breadcrumb depth index
-	((breadcrumbDepthIndex = breadcrumbDepthIndex+1))
-	
 done
 
 
