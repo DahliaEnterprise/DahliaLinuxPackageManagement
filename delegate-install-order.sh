@@ -1,5 +1,6 @@
 #!/bin/bash
 
+
 #Configuration
 maxExpectedPrerequisiteDepth=100
 debianPackageDirectoryLocation="/home/dahlia/Downloads/DahliaLinuxPackageManagement/Base/Debian/9.9.0/BuildEssential/amd64/"
@@ -10,24 +11,41 @@ fileDirectoryEntryBuildOrder=$debianPackageDirectoryLocation$entryBuildOrder
 for ((i = 0 ; i < $maxExpectedPrerequisiteDepth; i++)); do
 	breadcrumbDepth[$i]=-1
 done
-breadcrumbDepth[0]=0
-echo ${breadcrumbDepth[0]}
 
 #Define initial breadcrumb depth
+continueDefiningBreadcrumbDepth=true
+breadcrumbDepthIndex=0
+currentPrerequisiteLevelFirstLine=""
+while $continueDefiningBreadcrumbDepth;do
+	#Entry point get special treatment
+	if [[ breadcrumbDepthIndex -eq 0 ]]; then
+		currentPrerequisiteLevelFirstLine=$(head -n 1 $fileDirectoryEntryBuildOrder)
+	fi
+
+	#Non-Entry point
+	if [[ breadcrumbDepthIndex -gt 0 ]]; then
+		fileLocation=$debianPackageDirectoryLocation$currentPrerequisiteLevelFirstLine".txt"
+		#echo $fileLocation	
+		currentPrerequisiteLevelFirstLine=$(head -n 1 $fileLocation)
+	fi
+	
+	echo $currentPrerequisiteLevelFirstLine
+
+	#End while loop if currentPrerequisiteLevelFirstLine is empty/blank
+	stringLength=${#currentPrerequisiteLevelFirstLine}
+	if [[ $stringLength -eq 0 ]]; then
+		continueDefiningBreadcrumbDepth=false
+	fi
+
+	#Increment breadcrumb depth index
+	((breadcrumbDepthIndex = breadcrumbDepthIndex+1))
+	
+done
 
 
 
 
-
-
-
-
-
-
-
-
-
-
+echo "FINISHED"
 
 
 ###################################################################### OLD CODE TO BE CODED INTO NEW #################
