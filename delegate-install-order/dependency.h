@@ -8,7 +8,7 @@ public:
     
     void initialize();
     
-    void determinePrerequisites();
+    void determinePrerequisites(std::string directoryOfPrerequisiteInformation);
     
     void setDependencyName(std::string nameToSetAs);
     void setIsHead(bool newHeadState);
@@ -23,6 +23,7 @@ private:
     unsigned int totalPrerequisites;
     dependency* dependencies;
     unsigned int dependenciesMemorySize;
+    unsigned int dependenciesAvailableIndex;
     
     
 };

@@ -42,26 +42,23 @@ int main()
             headDependencies[headDependenciesCurrentIndex] = newDependency; headDependenciesCurrentIndex+=1;
             
             //Instruct dependency to collect its prerequisites.
-            newDependency.determinePrerequisites();
-            //TODO ^^
+            newDependency.determinePrerequisites(directoryOfPackageInformation);
+            
             //Reset for next iteration of while loop
             memset(line, '\0', 100); entryPointofBuildEssentialsTextFile.getline(line, 100);
         }
     }
     entryPointofBuildEssentialsTextFile.close();
     
+    //TODO: Loop through every "head" dependency
+    //          for every "head" dependency get deepest prerequisite depth
+    //              create a install order by queue breadcrumb arrays
+    //              breadcrumb array proposal:  0 0 0 0 0 0 0 0 0 0    (head dependency level 0,... 0)
+    //                                          0 0 0 0 0 0 0 0 0 1
+    //                                          0 0 0 0 0 0 0 0 0 2
+    //                                                          ...
+    //                                          2 0 1 0 0 0 0 0 0 0    (head dependency level 2, 0, 1)
     
-    /** DEPRECATED
-    dependency entryPointofBuildEssentials = dependency(); entryPointofBuildEssentials.setIsHead(true);
-        dependency dpkg_dev = dependency(); dpkg_dev.setDependencyName(std::string("dpkg-dev"));
-            dependency binutils = dependency(); binutils.setDependencyName(std::String("binutils"));
-                dependency libc6_dev = dependency(); libc6_dev.set
-        dpkg_dev.appendPrerequisite(binutils);
-            
-        
-        dependency gpp = dependency(); gpp.setDependencyName(std::string("g++"));
-        dependency libc6_dev = dependency(); libc6_dev.setDependencyName(std::string("libc6-dev"));
-    **/
-    //TODO: reference depencesinces and prerequiriestes
+    
     return 0;
 }

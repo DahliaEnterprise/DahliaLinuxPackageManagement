@@ -13,15 +13,16 @@ dependency::dependency()
     hasPrerequisites = false;
     totalPrerequisites = 0;
     dependenciesMemorySize = 0;
+    dependenciesAvailableIndex = 0;
 }
 
-dependenc::~dependency()
+dependency::~dependency()
 {
     name.clear();
     isHead = false;
     hasPrerequisites = false;
     totalPrerequisites = 0;
-    if(dependenciesMemorySize > 0){ dependencies = (dependency*) calloc(100, sizeof(dependency)); free(dependencies); }
+    if(dependenciesMemorySize > 0){ dependencies = (dependency*) calloc(dependenciesMemorySize, sizeof(dependency)); free(dependencies); }
     dependenciesMemorySize = 0;
 }
 
@@ -37,11 +38,33 @@ void dependency::initialize()
     \\ \\                   // //
 */
 void dependency::determinePrerequisites(std::string directoryOfPrerequisiteInformation)
-{
-    //TODO: open file containing prerequisities for this dependency.
-    //TODO: line-by-line get prerequisities
-    //TODO: append prerequisites to "dependencies" array
-    //TODO: execute determine prerequisites per appended prerequisite.
+{    
+    //open file containing prerequisities for this dependency.
+    std::string filenameAndDirectory = std::string(); filenameAndDirectory.append(directoryOfPrerequisiteInformation); filenameAndDirectory.append(name); filenameAndDirectory.append(".txt");
+    std::ifstream prerequisitesForThisDependency; prerequisitesForThisDependency.open(filenameAndDirectory, std::ifstream::in);
+    if(prerequisitesForThisDependency.is_open() == true)
+    {
+        //line-by-line get prerequisities
+        char line[100]; memset(line, '\0', 100); 
+        prerequisitesForThisDependency.getline(line, 100); 
+        while(strlen(line) > 0)
+        {
+            //Text representation to Object (dependency) representation.
+            dependency* prerequisite = new dependency();
+            prerequisite->initialize();
+            prerequisite->setDependencyName(std::string(line));
+            
+            //Instruct prerequisite to collect its prerequisites.
+            prerequisite->determinePrerequisites(directoryOfPrerequisiteInformation);
+            
+            //Append prerequisite to "dependencies" array for this dependency.
+            dependencies[dependenciesAvailableIndex] = *prerequisite;
+            dependenciesAvailableIndex++;
+            
+            //Reset for next iteration of while loop
+            memset(line, '\0', 100); prerequisitesForThisDependency.getline(line, 100);
+        }
+    }
 }
 
 
