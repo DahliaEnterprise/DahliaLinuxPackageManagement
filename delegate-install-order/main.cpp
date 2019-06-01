@@ -20,13 +20,13 @@ int main()
     std::string completeLocationToPackageHead = std::string(); completeLocationToPackageHead.append(directoryOfPackageInformation); completeLocationToPackageHead.append(packageHeadDependencyListFilename);
     
     /*
-    // //                \\ \\
-    || ||  Begin Script  || ||
-    \\ \\                // //
+    // //                 \\ \\
+    || ||   Begin Script   || ||
+    \\ \\                 // //
     */
     
     //load entry point BuildEssential_amd64.txt file
-    std::ifstream entryPointofBuildEssentialsTextFile; entryPointofBuildEssentialsTextFile.open("/home/dahlia/Downloads/DahliaLinuxPackageManagement/Base/Debian/9.9.0/BuildEssential/amd64/BuildEssential_amd64.txt", std::ifstream::in);
+    std::ifstream entryPointofBuildEssentialsTextFile; entryPointofBuildEssentialsTextFile.open(completeLocationToPackageHead, std::ifstream::in);
     if(entryPointofBuildEssentialsTextFile.is_open() == true)
     {
         //Each line is the name to a head dependency making up the "build-essentials" virtual package.
@@ -34,15 +34,22 @@ int main()
         entryPointofBuildEssentialsTextFile.getline(line, 100); 
         while(strlen(line) > 0)
         {
-            dependency newDependency = dependency(); newDependency.initialize(); newDependency.setDependencyName(std::string(line));
+            //Text representation to Object (dependency) representation
+            dependency newDependency = dependency(); 
+            newDependency.initialize(); 
+            newDependency.setDependencyName(std::string(line));
+            newDependency.setIsHead(true);
             headDependencies[headDependenciesCurrentIndex] = newDependency; headDependenciesCurrentIndex+=1;
             
+            //Instruct dependency to collect its prerequisites.
+            newDependency.determinePrerequisites();
+            //TODO ^^
             //Reset for next iteration of while loop
             memset(line, '\0', 100); entryPointofBuildEssentialsTextFile.getline(line, 100);
         }
     }
-
     entryPointofBuildEssentialsTextFile.close();
+    
     
     /** DEPRECATED
     dependency entryPointofBuildEssentials = dependency(); entryPointofBuildEssentials.setIsHead(true);
