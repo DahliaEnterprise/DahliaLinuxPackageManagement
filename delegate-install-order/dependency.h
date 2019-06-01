@@ -4,8 +4,11 @@ class dependency
 {
 public:
     explicit dependency();
+    ~dependency();
     
     void initialize();
+    
+    void determinePrerequisites();
     
     void setDependencyName(std::string nameToSetAs);
     void setIsHead(bool newHeadState);
@@ -19,6 +22,7 @@ private:
     bool hasPrerequisites;
     unsigned int totalPrerequisites;
     dependency* dependencies;
+    unsigned int dependenciesMemorySize;
     
     
 };

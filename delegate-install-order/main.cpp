@@ -19,11 +19,11 @@ int main()
     std::string packageHeadDependencyListFilename = std::string("BuildEssential_amd64.txt");
     std::string completeLocationToPackageHead = std::string(); completeLocationToPackageHead.append(directoryOfPackageInformation); completeLocationToPackageHead.append(packageHeadDependencyListFilename);
     
-    /*
+/*
     // //                 \\ \\
     || ||   Begin Script   || ||
     \\ \\                 // //
-    */
+*/
     
     //load entry point BuildEssential_amd64.txt file
     std::ifstream entryPointofBuildEssentialsTextFile; entryPointofBuildEssentialsTextFile.open(completeLocationToPackageHead, std::ifstream::in);
