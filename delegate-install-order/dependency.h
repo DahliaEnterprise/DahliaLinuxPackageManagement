@@ -5,6 +5,8 @@ class dependency
 public:
     explicit dependency();
     
+    void initialize();
+    
     void setDependencyName(std::string nameToSetAs);
     void setIsHead(bool newHeadState);
     
@@ -16,6 +18,7 @@ private:
     //Prerequisites associated with this depdendency.
     bool hasPrerequisites;
     unsigned int totalPrerequisites;
+    dependency* dependencies;
     
     
 };
