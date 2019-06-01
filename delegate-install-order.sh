@@ -36,6 +36,7 @@ while $continueDefiningBreadcrumbDepth;do
 		#End while loop if currentPrerequisiteLevelFirstLine is empty/blank
 		continueDefiningBreadcrumbDepth=false
 	else
+		breadcrumbDepth[$breadcrumDepthIndex]=0
 		#Increment breadcrumb depth index
 		((breadcrumbDepthIndex = breadcrumbDepthIndex+1))
 	fi

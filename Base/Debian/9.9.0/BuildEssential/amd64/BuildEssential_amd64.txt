@@ -1,5 +1,5 @@
 dpkg-dev
-g++
+gpp
 libc6-dev
 gcc
 make
