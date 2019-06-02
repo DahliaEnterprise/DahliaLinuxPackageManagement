@@ -7,6 +7,7 @@ public:
     ~dependency();
     
     void initialize();
+    void initializeAsNull();
     
     void appendPrerequisite(int prerequisiteGlobalId);
     void setGlobalIdentifier(int identifier);
@@ -15,7 +16,9 @@ public:
     int getGlobalIdentifier();
     
 private:
-    //Depedency Information
+    bool isNull;
+    
+    //Dependency Information
     char* name;
     int id;
     

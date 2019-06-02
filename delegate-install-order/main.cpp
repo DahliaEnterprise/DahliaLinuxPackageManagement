@@ -7,13 +7,29 @@
 #include <sys/types.h>
 #include "dependency.cpp"
 
-int main()
+
+dependency entireDependencyList[100];
+int entireDependencyListSize = 0;
+int nextAvailableGlobalIdentifier = 1;
+int headDependenciesGlobalIdentifier[100];
+int headDependenciesGlobalIdentifierSize = 0;
+
+dependency getDependencyByGlobalId(int globalId)
 {
-    //Initialize
-    dependency entireDependencyList[100];
-    int entireDependencyListSize = 0;
-    int nextAvailableGlobalIdentifier = 1;
-    
+    bool prerequisiteFound = false;
+    for(int a = 0; a < entireDependencyListSize; a++)
+    {
+        if(entireDependencyList[a].getGlobalIdentifier() == globalId)
+        {
+            prerequisiteFound = true;
+            return entireDependencyList[a];
+        }
+    }
+    if(prerequisiteFound == false){ dependency prerequisite; prerequisite.initializeAsNull(); return prerequisite; }
+}
+
+int main()
+{    
     //Define locale as English UTF-8
     const std::locale locale = std::locale("en_US.utf8");
     
@@ -104,14 +120,65 @@ for(int i = 0; i < entireDependencyListSize; i++)
 }
    
 
-   
-   
-   
+//Determine head dependencies
+std::string headDependencyListTextFileLocation = std::string(); headDependencyListTextFileLocation.append(directoryOfPackageInformation); headDependencyListTextFileLocation.append(packageHeadDependencyListFilename);
+std::ifstream headDependencyListTextFile; headDependencyListTextFile.open(headDependencyListTextFileLocation, std::ifstream::in);
+if(headDependencyListTextFile.is_open() == true)
+{
+    char dependencyName[100];
+    memset(dependencyName, '\0', 100);
+    headDependencyListTextFile.getline(dependencyName, 100); 
+    while(strlen(dependencyName) > 0)
+    { 
+        //Loop through entireDependencyList list in search of dependency object named the content of dependencyName.
+        bool prerequisiteFound = false;
+        dependency prerequisite;
+        for(int a = 0; a < entireDependencyListSize; a++)
+        {
+            if(strcmp(dependencyName, entireDependencyList[a].getDependencyName()) == 0)
+            {
+                prerequisiteFound = true;
+                prerequisite = entireDependencyList[a];
+                
+                //end loop
+                a = entireDependencyListSize;
+            }
+        }
+        
+        if(prerequisiteFound == true)
+        {
+            headDependenciesGlobalIdentifier[headDependenciesGlobalIdentifierSize] = prerequisite.getGlobalIdentifier();
+            headDependenciesGlobalIdentifierSize += 1;
+            std::cout << prerequisite.getGlobalIdentifier() << "\n";
+        }
+        
+        //Reset for next iteration of while loop
+        memset(dependencyName, '\0', 100);
+        headDependencyListTextFile.getline(dependencyName, 100);
+    }
+}
+    
+    
 //Determine the deepest depth
 int deepestDepthFound = 0; //0 = root, 1 = sublevel, and so on.
-int lastBreadcrumbProcessed[100];
-int currentBreadcrumbProcess[100];
-//TODO: loop....
+int lastBreadcrumbProcessed[100]; for(int i = 0; i < 100; i++){ lastBreadcrumbProcessed[i] = -1; }
+int currentBreadcrumbProcess[100]; for(int i = 0; i < 100; i++){ currentBreadcrumbProcess[i] = -1; } currentBreadcrumbProcess[0] = 0;
+
+    /** Define initial breadcrumb process, 
+     *  get first dependency of each sublevel until it ends, 
+     *  count the depth length and configure currentBreadcrumbProcess with that many zeros across the array. **/
+    headDependenciesGlobalIdentifier[0];
+    
+
+/** Continue breadcrumb process....
+bool keep_looping = true;
+while(keep_looping == true)
+{
+**/
+   
+/**
+}
+**/
    
    
    
