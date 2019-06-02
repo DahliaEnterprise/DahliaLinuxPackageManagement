@@ -24,6 +24,7 @@ void dependency::initialize()
 {
     name = (char*)malloc(100 * sizeof(char*));
     memset(name, '\0', 100);
+    for(int i = 0; i < 100; i++){ prerequisiteGlobalIdentifier[i] = -1; }
 }
 
 void dependency::initializeAsNull(){ isNull = true; }
@@ -54,5 +55,8 @@ void dependency::setDependencyName(char* nameToSetAs)
     || ||  Primal Conviences, Get Information   || ||
     \\ \\                                      // //
 */
+bool dependency::getIsNull(){ return isNull; }
 char* dependency::getDependencyName(){ return name; }
 int dependency::getGlobalIdentifier(){ return id; }
+int dependency::getTotalPrerequisites(){ return totalPrerequisites; }
+int dependency::getPrerequisiteGlobalIdentifierByLevel(int level){ return prerequisiteGlobalIdentifier[level]; }

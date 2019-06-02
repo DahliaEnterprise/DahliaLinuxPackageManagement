@@ -12,8 +12,12 @@ public:
     void appendPrerequisite(int prerequisiteGlobalId);
     void setGlobalIdentifier(int identifier);
     void setDependencyName(char* nameToSetAs);
+    
+    bool getIsNull();
     char* getDependencyName();
     int getGlobalIdentifier();
+    int getTotalPrerequisites();
+    int getPrerequisiteGlobalIdentifierByLevel(int level);
     
 private:
     bool isNull;
