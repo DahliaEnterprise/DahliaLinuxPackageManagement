@@ -108,6 +108,10 @@ for(int i = 0; i < entireDependencyListSize; i++)
    
    
 //Determine the deepest depth
+int deepestDepthFound = 0; //0 = root, 1 = sublevel, and so on.
+int lastBreadcrumbProcessed[100];
+int currentBreadcrumbProcess[100];
+//TODO: loop....
    
    
    
