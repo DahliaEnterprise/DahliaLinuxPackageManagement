@@ -34,7 +34,7 @@ int main()
 //TODO: traverse links to the deepest depth
 //TODO: install debian packages
 
-//Become aware of dependencies unlinked list.
+//Become aware of dependencies unlinked text list represented as (dependency class) Objects.
 std::ifstream manifestTextFile; manifestTextFile.open(manifestLocation, std::ifstream::in);
 if(manifestTextFile.is_open() == true)
 {
@@ -52,22 +52,29 @@ if(manifestTextFile.is_open() == true)
         headDependencies[headDependenciesSize] = prerequisite;
         headDependenciesSize += 1;
 
-        //std::cout << prerequisite.getDependencyName() << ", \n";
-        
         //Reset for next iteration of while loop
         memset(line, '\0', 100);
         manifestTextFile.getline(line, 100);
     }
 }
 
-//Convert text unlinked list to Object unlinked list
-//TODO: loop through text unlinked list, every text line make object of "dependency" class.
+
+
+//Loop through each item in unlinked list, make each object aware of its prerequisite name and global identifiers.
 for(int i = 0; i < headDependenciesSize; i++)
 {
-    std::cout << headDependencies[i].getDependencyName() << " \n";
+    //Open file that contains list of prerequisites for this dependency.
+    std::string prerequisiteListTextFileLocation = std::string(); prerequisiteListTextFileLocation.append(directoryOfPackageInformation); prerequisiteListTextFileLocation.append(headDependencies[i].getDependencyName()); prerequisiteListTextFileLocation.append(".txt");
+    std::cout << prerequisiteListTextFileLocation << "\n";
+    std::ifstream prerequisiteListTextFile; prerequisiteListTextFile.open(prerequisiteListTextFileLocation, std::ifstream::in);
+    if(prerequisiteListTextFile.is_open() == true)
+    {
+        std::cout << "prereq file found\n";
+    }
 }
-   //std::cout << headDependenciesSize;
    
+//TODO: Determine the deepest depth
+
    
    
    

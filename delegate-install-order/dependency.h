@@ -11,6 +11,7 @@ public:
     void setGlobalIdentifier(int identifier);
     void setDependencyName(char* nameToSetAs);
     char* getDependencyName();
+    int getGlobalIdentifier();
     
 private:
     //Depedency Information

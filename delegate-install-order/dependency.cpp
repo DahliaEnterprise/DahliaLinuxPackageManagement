@@ -35,3 +35,4 @@ void dependency::setDependencyName(char* nameToSetAs)
 
 
 char* dependency::getDependencyName(){ return name; }
+int dependency::getGlobalIdentifier(){ return id; }
