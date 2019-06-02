@@ -26,8 +26,9 @@ void breadcrumb_trail::appendBreadCrumb(int dependencyGlobalIdentifier, int brea
 int breadcrumb_trail::tailEndGlobalIdentifier()
 {
     int output = -1;
-    breadcrumb* tailEndBreadcrumb = breadcrumbs[breadcrumbsSize];
-    int tailEndBreadcrumbGlobalIdentifier = tailEndBreadcrumb.getGlobalIdentifier();
+    breadcrumb* tailEndBreadcrumb = breadcrumbs[breadcrumbsSize-1];
+    int tailEndBreadcrumbGlobalIdentifier = tailEndBreadcrumb->getGlobalIdentifier();
+    output = tailEndBreadcrumbGlobalIdentifier;
     
     return output;
 }
@@ -36,9 +37,24 @@ int breadcrumb_trail::tailEndCurrentLevel()
 {
     int output = -1;
     
-    breadcrumb* tailEndBreadcrumb = breadcrumbs[breadcrumbsSize];
-    int tailEndBreadcrumbCurrentLevel = tailEndBreadcrumb.getGlobalIdentifier();
+    breadcrumb* tailEndBreadcrumb = breadcrumbs[breadcrumbsSize-1];
+    int tailEndBreadcrumbCurrentLevel = tailEndBreadcrumb->getCurrentLevel();
     output = tailEndBreadcrumbCurrentLevel;
     
     return output;
+}
+
+int breadcrumb_trail::totalBreadcrumbs()
+{
+    int output = -1;
+    
+    output = breadcrumbsSize;
+    
+    return output;
+}
+
+breadcrumb* breadcrumb_trail::getBreadcrumbByIndex(int index)
+{
+    
+    return breadcrumbs[index];
 }

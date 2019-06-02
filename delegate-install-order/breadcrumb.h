@@ -8,6 +8,7 @@ public:
     
     void setBreadcrumb(int dependencyGlobalIdentifier, int levelToSetAs);
     int getGlobalIdentifier();
+    int getCurrentLevel();
     
 private:
     int level;

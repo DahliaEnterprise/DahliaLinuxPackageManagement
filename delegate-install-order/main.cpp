@@ -209,49 +209,76 @@ if(headDependencyListTextFile.is_open() == true)
  *      
  */
 
+
+
+
 breadcrumb_trail* breadcrumbTrails = (breadcrumb_trail*)malloc(100000 * sizeof(breadcrumb_trail));if(breadcrumbTrails == nullptr){ std::cout << "failed allocation breadcrumb trail"; }
 int breadcrumbTrailsSize = 0;
 
+//initial trail
 breadcrumb_trail initialTrail;
 int deepestDepthOfLevelsZero = determineDeepestDepthOfEveryLevelAsZero();
-for(int i = 0; i < deepestDepthOfLevelsZero; i++)
+initialTrail.appendBreadCrumb(headDependenciesGlobalIdentifier[0], 0);
+
+dependency headDepZeroLevel = getDependencyByGlobalId(headDependenciesGlobalIdentifier[0]);
+int headDepPrerequisiteGlobalId = headDepZeroLevel.getPrerequisiteGlobalIdentifierByLevel(0);
+int lastPrerequisiteGlobalId = headDepPrerequisiteGlobalId;
+for(int i = 1; i < deepestDepthOfLevelsZero; i++)
 {
     int dependencyGlobalId = -1;
-    if(i == 0){ dependencyGlobalId = headDependenciesGlobalIdentifier[0]; }
-    else if(i > 0)
-    { 
-        //dependecyGlobalId =
-        
-    }
-    initialTrail.appendBreadCrumb(dependencyGlobalId, 0);
+    
+    //get next prerequisite (at level zero) global id.
+    dependency currentPrerequisite = getDependencyByGlobalId(lastPrerequisiteGlobalId);
+    if(currentPrerequisite.getTotalPrerequisites() > 0)
+    {
+        dependencyGlobalId = currentPrerequisite.getPrerequisiteGlobalIdentifierByLevel(0);
+        //append information to breadcrumb trail.
+        initialTrail.appendBreadCrumb(dependencyGlobalId, 0);
+        //Setup for next iteration
+        lastPrerequisiteGlobalId = dependencyGlobalId;
+    }else{ i = deepestDepthOfLevelsZero; }
 }
 breadcrumbTrails[0] = initialTrail;
 breadcrumbTrailsSize += 1;
 
 
+
 //Continue producing trails until process has completed.
-keep_looping = true;
+bool keep_looping = true;
 while(keep_looping == true)
 {
     //get current breadcrumbTrail to process from.
-    breadcrumb_trail trail = breadcrumbTrails[breadcrumbTrailsSize];
-    
+    breadcrumb_trail trail = breadcrumbTrails[breadcrumbTrailsSize-1];
+
     //determine if tail end breadcrumb can move down a level
     int breadcrumbGlobalIdentifier = trail.tailEndGlobalIdentifier();
-    dependency* prerequisite = getDependencyByGlobalId(breadcrumbGlobalIdentifier);
-    int totalPrerequisites = prerequisite->getTotalPrerequisites();/**normalized totalPrerequisites:**/ int normalizedTotalPrerequisites = totalPrerequisites; if(normalizedTotalPrerequisites > 0){ normalizedTotalPrerequisites -= 1; }
+    std::cout << breadcrumbGlobalIdentifier << "\n";
+    dependency prerequisite = getDependencyByGlobalId(breadcrumbGlobalIdentifier);
+    std::cout << prerequisite.getDependencyName();
+    int totalPrerequisites = prerequisite.getTotalPrerequisites();
     int currentPrerequisiteLevel = trail.tailEndCurrentLevel();
     int proposedNextPrerequisiteLevel = currentPrerequisiteLevel + 1;
-    if(proposedNextPrerequisiteLevel == normalizedTotalPrerequisites)
+    std::cout << proposedNextPrerequisiteLevel << " " << totalPrerequisites << "\n";
+    if(proposedNextPrerequisiteLevel == totalPrerequisites)
     {
         //Can move down a level, create a new trail with the modified level number.
-    }else if(proposedNextPrerequisiteLevel != normalizedTotalPrerequisites)
+        breadcrumb_trail newTrail;
+        for(int i = 0; i < trail.totalBreadcrumbs(); i++)
+        {
+            //Coder-Copy breadcrumb at index position i to new trail (if last breadcrum, instead of copying use the modified level number.)
+            //breadcrumb* breadcrumbAtIndex = trail.getBreadcrumbByIndex(i);
+        }
+    }else if(proposedNextPrerequisiteLevel != totalPrerequisites)
     {
         //End of prerequisites, create a new trail with this breadcrumb removed.
     }
     
     //create the next trail, with the tail end level moved down one, if the end of the list has been reached, remove this breadcrumb from the tail.
     breadcrumb_trail nextTrail;
+    
+    
+    //TEMP
+    keep_looping = false;
 }
 
 

@@ -17,3 +17,4 @@ breadcrumb::~breadcrumb()
 
 void breadcrumb::setBreadcrumb(int setDependencyGlobalIdentifier, int levelToSetAs){ dependencyGlobalIdentifier = setDependencyGlobalIdentifier; level = levelToSetAs; }
 int breadcrumb::getGlobalIdentifier(){ return dependencyGlobalIdentifier; }
+int breadcrumb::getCurrentLevel(){ return level; }
