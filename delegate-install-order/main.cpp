@@ -10,8 +10,8 @@
 int main()
 {
     //Initialize
-    dependency headDependencies[100];
-    int headDependenciesSize = 0;
+    dependency entireDependencyList[100];
+    int entireDependencyListSize = 0;
     int nextAvailableGlobalIdentifier = 1;
     
     //Define locale as English UTF-8
@@ -49,8 +49,8 @@ if(manifestTextFile.is_open() == true)
         prerequisite.setDependencyName((char*)std::string(line).c_str());
         prerequisite.setGlobalIdentifier(nextAvailableGlobalIdentifier);
         nextAvailableGlobalIdentifier += 1;
-        headDependencies[headDependenciesSize] = prerequisite;
-        headDependenciesSize += 1;
+        entireDependencyList[entireDependencyListSize] = prerequisite;
+        entireDependencyListSize += 1;
 
         //Reset for next iteration of while loop
         memset(line, '\0', 100);
@@ -61,20 +61,54 @@ if(manifestTextFile.is_open() == true)
 
 
 //Loop through each item in unlinked list, make each object aware of its prerequisite name and global identifiers.
-for(int i = 0; i < headDependenciesSize; i++)
+for(int i = 0; i < entireDependencyListSize; i++)
 {
     //Open file that contains list of prerequisites for this dependency.
-    std::string prerequisiteListTextFileLocation = std::string(); prerequisiteListTextFileLocation.append(directoryOfPackageInformation); prerequisiteListTextFileLocation.append(headDependencies[i].getDependencyName()); prerequisiteListTextFileLocation.append(".txt");
-    std::cout << prerequisiteListTextFileLocation << "\n";
+    std::string prerequisiteListTextFileLocation = std::string(); prerequisiteListTextFileLocation.append(directoryOfPackageInformation); prerequisiteListTextFileLocation.append(entireDependencyList[i].getDependencyName()); prerequisiteListTextFileLocation.append(".txt");
     std::ifstream prerequisiteListTextFile; prerequisiteListTextFile.open(prerequisiteListTextFileLocation, std::ifstream::in);
     if(prerequisiteListTextFile.is_open() == true)
     {
-        std::cout << "prereq file found\n";
+        //For each text prerequisite in list, append as prerequisite to dependency object.  
+        char dependencyName[100];
+        memset(dependencyName, '\0', 100);
+        prerequisiteListTextFile.getline(dependencyName, 100); 
+        while(strlen(dependencyName) > 0)
+        { 
+            //Loop through entireDependencyList list in search of dependency object named the content of dependencyName.
+            bool prerequisiteFound = false;
+            dependency prerequisite;
+            for(int a = 0; a < entireDependencyListSize; a++)
+            {
+                if(strcmp(dependencyName, entireDependencyList[a].getDependencyName()) == 0)
+                {
+                    prerequisiteFound = true;
+                    prerequisite = entireDependencyList[a];
+                    
+                    //end loop
+                    a = entireDependencyListSize;
+                }
+            }
+            
+            if(prerequisiteFound == true)
+            {
+                //Append prerequisite information to the dependency.
+                entireDependencyList[i].appendPrerequisite(prerequisite.getGlobalIdentifier());
+            }
+            
+
+            //Reset for next iteration of while loop
+            memset(dependencyName, '\0', 100);
+            prerequisiteListTextFile.getline(dependencyName, 100);
+        }
     }
 }
    
-//TODO: Determine the deepest depth
 
+   
+   
+   
+//Determine the deepest depth
+   
    
    
    

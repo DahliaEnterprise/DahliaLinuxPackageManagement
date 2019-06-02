@@ -8,6 +8,7 @@ public:
     
     void initialize();
     
+    void appendPrerequisite(int prerequisiteGlobalId);
     void setGlobalIdentifier(int identifier);
     void setDependencyName(char* nameToSetAs);
     char* getDependencyName();
@@ -17,6 +18,10 @@ private:
     //Depedency Information
     char* name;
     int id;
+    
+    //Prerequisite Information
+    int totalPrerequisites;
+    int prerequisiteGlobalIdentifier[100];
     
 };
 #endif
