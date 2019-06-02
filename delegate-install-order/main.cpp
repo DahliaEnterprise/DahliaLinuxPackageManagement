@@ -163,34 +163,30 @@ if(headDependencyListTextFile.is_open() == true)
     
 
 
+    
+    
+////////////////////////////////////// DEPRECATED --- CONVERTING TO CLASS BASED DETERMINATION ///////////////
+/*
 //Determine the deepest depth
 int deepestDepthFound = 0; //0 = root, 1 = sublevel, and so on.
-int lastBreadcrumbProcessed[100]; for(int i = 0; i < 100; i++){ lastBreadcrumbProcessed[i] = -1; }
-int currentBreadcrumbProcess[100]; for(int i = 0; i < 100; i++){ currentBreadcrumbProcess[i] = -1; }
-int currentBreadcrumProcessDepth = -1;
+int currentBreadcrumbProcessDepth = -1;
 
-/** Define initial breadcrumb process, 
-    *  get first dependency of each sublevel until it ends, 
-    *  count the depth length and configure currentBreadcrumbProcess with that many zeros across the array. **/
+/** Define initial breadcrumb process, get first dependency of each parent dependency until it ends, count the depth length **
 int previousDepthsPrerequisiteGlobalIdentifier = -1;
 if(headDependenciesGlobalIdentifier[0] > 0)
 {
-    currentBreadcrumProcessDepth += 1;
-    currentBreadcrumbProcess[currentBreadcrumProcessDepth] = 0;
+    currentBreadcrumbProcessDepth += 1;
     previousDepthsPrerequisiteGlobalIdentifier = headDependenciesGlobalIdentifier[0];
 }
 
 bool keep_looping = true;
 while(keep_looping == true)
 {
-    std::cout << previousDepthsPrerequisiteGlobalIdentifier << "\n";
     //Is there a next depth as indicated by the existance of a first level prerequisite of the dependency.
     dependency prerequisite = getDependencyByGlobalId(previousDepthsPrerequisiteGlobalIdentifier);
     if(prerequisite.getIsNull() == false)
     {
-        //Next depth exists
-        currentBreadcrumProcessDepth += 1;
-        currentBreadcrumbProcess[currentBreadcrumProcessDepth] = 0;
+        currentBreadcrumbProcessDepth += 1;
         previousDepthsPrerequisiteGlobalIdentifier = prerequisite.getPrerequisiteGlobalIdentifierByLevel(0);
         
     }else if(prerequisite.getIsNull() == true)
@@ -198,23 +194,12 @@ while(keep_looping == true)
         keep_looping = false;
     }
 }
-    
-    
-    //std::cout << "first level of every dependency has the deepest depth of: " << currentBreadcrumProcessDepth << "\n";
 
-/** now process using breadcrumb for processing....
-bool keep_looping = true;
-while(keep_looping == true)
-{
-**/
+    
+    std::cout << "first level of every dependency has the deepest depth of: " << currentBreadcrumbProcessDepth << "\n";
+
    
-/**
-}
-**/
-   
-   
-   
-   
+   */
    
    
    
