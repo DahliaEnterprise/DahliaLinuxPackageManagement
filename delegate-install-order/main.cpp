@@ -6,6 +6,8 @@
 #include <dirent.h>
 #include <sys/types.h>
 #include "dependency.cpp"
+#include "breadcrumb.cpp"
+#include "breadcrumb_trail.cpp"
 
 
 dependency entireDependencyList[100];
@@ -26,6 +28,43 @@ dependency getDependencyByGlobalId(int globalId)
         }
     }
     if(prerequisiteFound == false){ dependency prerequisite; prerequisite.initializeAsNull(); return prerequisite; }
+}
+
+int determineDeepestDepthOfEveryLevelAsZero()
+{
+    int output = -1;
+    
+    //Determine the deepest depth
+    int deepestDepthFound = 0; //0 = root, 1 = sublevel, and so on.
+    int currentBreadcrumbProcessDepth = -1;
+
+    /** Define initial breadcrumb process, get first dependency of each parent dependency until it ends, count the depth length **/
+    int previousDepthsPrerequisiteGlobalIdentifier = -1;
+    if(headDependenciesGlobalIdentifier[0] > 0)
+    {
+        currentBreadcrumbProcessDepth += 1;
+        previousDepthsPrerequisiteGlobalIdentifier = headDependenciesGlobalIdentifier[0];
+    }
+
+    bool keep_looping = true;
+    while(keep_looping == true)
+    {
+        //Is there a next depth as indicated by the existance of a first level prerequisite of the dependency.
+        dependency prerequisite = getDependencyByGlobalId(previousDepthsPrerequisiteGlobalIdentifier);
+        if(prerequisite.getIsNull() == false)
+        {
+            currentBreadcrumbProcessDepth += 1;
+            previousDepthsPrerequisiteGlobalIdentifier = prerequisite.getPrerequisiteGlobalIdentifierByLevel(0);
+            
+        }else if(prerequisite.getIsNull() == true)
+        {
+            keep_looping = false;
+        }
+    }
+
+    deepestDepthFound = currentBreadcrumbProcessDepth;
+    output = deepestDepthFound;
+    return output;
 }
 
 int main()
@@ -162,49 +201,71 @@ if(headDependencyListTextFile.is_open() == true)
 }
     
 
+/*TODO: when the deepest depth of that level-per-depth-of-prerequisites is found,
+ *      install that debian package, 
+ *      store the entire breadcrumb trail as an array managed by a per class basis,
+ *      append breadcrumb trail to a class that will store the history of installations (history of breadcrumbs),
+ *      when moving up(or down?) a depth and or level, check the history to determine if it has been previously been installed as such, if not, install deb package, keep installing.
+ *      
+ */
 
-    
-    
-////////////////////////////////////// DEPRECATED --- CONVERTING TO CLASS BASED DETERMINATION ///////////////
-/*
-//Determine the deepest depth
-int deepestDepthFound = 0; //0 = root, 1 = sublevel, and so on.
-int currentBreadcrumbProcessDepth = -1;
+breadcrumb_trail* breadcrumbTrails = (breadcrumb_trail*)malloc(100000 * sizeof(breadcrumb_trail));if(breadcrumbTrails == nullptr){ std::cout << "failed allocation breadcrumb trail"; }
+int breadcrumbTrailsSize = 0;
 
-/** Define initial breadcrumb process, get first dependency of each parent dependency until it ends, count the depth length **
-int previousDepthsPrerequisiteGlobalIdentifier = -1;
-if(headDependenciesGlobalIdentifier[0] > 0)
+breadcrumb_trail initialTrail;
+int deepestDepthOfLevelsZero = determineDeepestDepthOfEveryLevelAsZero();
+for(int i = 0; i < deepestDepthOfLevelsZero; i++)
 {
-    currentBreadcrumbProcessDepth += 1;
-    previousDepthsPrerequisiteGlobalIdentifier = headDependenciesGlobalIdentifier[0];
+    int dependencyGlobalId = -1;
+    if(i == 0){ dependencyGlobalId = headDependenciesGlobalIdentifier[0]; }
+    else if(i > 0)
+    { 
+        //dependecyGlobalId =
+        
+    }
+    initialTrail.appendBreadCrumb(dependencyGlobalId, 0);
 }
+breadcrumbTrails[0] = initialTrail;
+breadcrumbTrailsSize += 1;
 
-bool keep_looping = true;
+
+//Continue producing trails until process has completed.
+keep_looping = true;
 while(keep_looping == true)
 {
-    //Is there a next depth as indicated by the existance of a first level prerequisite of the dependency.
-    dependency prerequisite = getDependencyByGlobalId(previousDepthsPrerequisiteGlobalIdentifier);
-    if(prerequisite.getIsNull() == false)
+    //get current breadcrumbTrail to process from.
+    breadcrumb_trail trail = breadcrumbTrails[breadcrumbTrailsSize];
+    
+    //determine if tail end breadcrumb can move down a level
+    int breadcrumbGlobalIdentifier = trail.tailEndGlobalIdentifier();
+    dependency* prerequisite = getDependencyByGlobalId(breadcrumbGlobalIdentifier);
+    int totalPrerequisites = prerequisite->getTotalPrerequisites();/**normalized totalPrerequisites:**/ int normalizedTotalPrerequisites = totalPrerequisites; if(normalizedTotalPrerequisites > 0){ normalizedTotalPrerequisites -= 1; }
+    int currentPrerequisiteLevel = trail.tailEndCurrentLevel();
+    int proposedNextPrerequisiteLevel = currentPrerequisiteLevel + 1;
+    if(proposedNextPrerequisiteLevel == normalizedTotalPrerequisites)
     {
-        currentBreadcrumbProcessDepth += 1;
-        previousDepthsPrerequisiteGlobalIdentifier = prerequisite.getPrerequisiteGlobalIdentifierByLevel(0);
-        
-    }else if(prerequisite.getIsNull() == true)
+        //Can move down a level, create a new trail with the modified level number.
+    }else if(proposedNextPrerequisiteLevel != normalizedTotalPrerequisites)
     {
-        keep_looping = false;
+        //End of prerequisites, create a new trail with this breadcrumb removed.
     }
+    
+    //create the next trail, with the tail end level moved down one, if the end of the list has been reached, remove this breadcrumb from the tail.
+    breadcrumb_trail nextTrail;
 }
 
-    
-    std::cout << "first level of every dependency has the deepest depth of: " << currentBreadcrumbProcessDepth << "\n";
 
-   
-   */
-   
-   
-   
-   
-   
+
+
+
+
+
+
+
+
+
+
+
    
    
    
