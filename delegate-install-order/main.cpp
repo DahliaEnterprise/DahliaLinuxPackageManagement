@@ -197,28 +197,6 @@ while(keep_looping == true)
     {
         keep_looping = false;
     }
-    
-    /*
-    std::cout << currentBreadcrumbProcess[currentBreadcrumProcessDepth] << "\n";
-    if(currentBreadcrumbProcess[currentBreadcrumProcessDepth] == -1)
-    {
-        //Get previous depths first level dependency, and obtain its' first level dependency global identifier, if none then the deepest depth of every first level dependency has been found.
-        
-        //Is there a next depth as indicated by the existance of a first level prerequisite of the dependency.
-        dependency prerequisite = getDependencyByGlobalId(previousDepthsPrerequisiteGlobalIdentifier);
-        std::cout << previousDepthsPrerequisiteGlobalIdentifier << "\n";
-        if(prerequisite.getTotalPrerequisites() == 0)
-        {
-            //Reached the deepest depth of every first level dependency.
-            keep_looping = false;
-        }else if(prerequisite.getTotalPrerequisites() > 0)
-        {
-            //Continue searching deepest depth...
-            previousDepthsPrerequisiteGlobalIdentifier = prerequisite.getPrerequisiteGlobalIdentifierByLevel(0);
-            currentBreadcrumProcessDepth += 1;
-        }
-    }
-    */
 }
     
     
