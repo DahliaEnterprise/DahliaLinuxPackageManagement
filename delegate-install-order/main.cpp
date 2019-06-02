@@ -3,19 +3,23 @@
 #include <iostream>
 #include <fstream>
 #include <cstring>
+#include <dirent.h>
+#include <sys/types.h>
 #include "dependency.cpp"
 
 int main()
 {
     //Initialize
     dependency headDependencies[100];
-    unsigned int headDependenciesCurrentIndex = 0;
+    int headDependenciesSize = 0;
+    int nextAvailableGlobalIdentifier = 1;
     
     //Define locale as English UTF-8
     const std::locale locale = std::locale("en_US.utf8");
     
     //Configuration
     std::string directoryOfPackageInformation = std::string("/home/dahlia/Downloads/DahliaLinuxPackageManagement/Base/Debian/9.9.0/BuildEssential/amd64/");
+    std::string manifestLocation = std::string(); manifestLocation.append(directoryOfPackageInformation); manifestLocation.append("manifest.txt");
     std::string packageHeadDependencyListFilename = std::string("BuildEssential_amd64.txt");
     std::string completeLocationToPackageHead = std::string(); completeLocationToPackageHead.append(directoryOfPackageInformation); completeLocationToPackageHead.append(packageHeadDependencyListFilename);
     
@@ -24,32 +28,57 @@ int main()
     || ||   Begin Script   || ||
     \\ \\                 // //
 */
+
+//TODO: load all files
+//TODO: link files with objects
+//TODO: traverse links to the deepest depth
+//TODO: install debian packages
+
+//Become aware of dependencies unlinked list.
+std::ifstream manifestTextFile; manifestTextFile.open(manifestLocation, std::ifstream::in);
+if(manifestTextFile.is_open() == true)
+{
     
-    //load entry point BuildEssential_amd64.txt file
-    std::ifstream entryPointofBuildEssentialsTextFile; entryPointofBuildEssentialsTextFile.open(completeLocationToPackageHead, std::ifstream::in);
-    if(entryPointofBuildEssentialsTextFile.is_open() == true)
-    {
-        //Each line is the name to a head dependency making up the "build-essentials" virtual package.
-        char line[100]; memset(line, '\0', 100); 
-        entryPointofBuildEssentialsTextFile.getline(line, 100); 
-        while(strlen(line) > 0)
-        {
-            //Text representation to Object (dependency) representation
-            dependency newDependency = dependency(); 
-            newDependency.initialize(); 
-            newDependency.setDependencyName(std::string(line));
-            newDependency.setIsHead(true);
-            headDependencies[headDependenciesCurrentIndex] = newDependency; headDependenciesCurrentIndex+=1;
-            
-            //Instruct dependency to collect its prerequisites.
-            newDependency.determinePrerequisites(directoryOfPackageInformation);
-            
-            //Reset for next iteration of while loop
-            memset(line, '\0', 100); entryPointofBuildEssentialsTextFile.getline(line, 100);
-        }
+    char line[100];
+    memset(line, '\0', 100);
+    manifestTextFile.getline(line, 100); 
+    while(strlen(line) > 0)
+    { 
+        dependency prerequisite;
+        prerequisite.initialize();
+        prerequisite.setDependencyName((char*)std::string(line).c_str());
+        prerequisite.setGlobalIdentifier(nextAvailableGlobalIdentifier);
+        nextAvailableGlobalIdentifier += 1;
+        headDependencies[headDependenciesSize] = prerequisite;
+        headDependenciesSize += 1;
+
+        //std::cout << prerequisite.getDependencyName() << ", \n";
+        
+        //Reset for next iteration of while loop
+        memset(line, '\0', 100);
+        manifestTextFile.getline(line, 100);
     }
-    entryPointofBuildEssentialsTextFile.close();
-    
+}
+
+//Convert text unlinked list to Object unlinked list
+//TODO: loop through text unlinked list, every text line make object of "dependency" class.
+for(int i = 0; i < headDependenciesSize; i++)
+{
+    std::cout << headDependencies[i].getDependencyName() << " \n";
+}
+   //std::cout << headDependenciesSize;
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
     //TODO: Loop through every "head" dependency
     //          for every "head" dependency get deepest prerequisite depth
     //              create a install order by queue breadcrumb arrays

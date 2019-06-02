@@ -8,23 +8,14 @@ public:
     
     void initialize();
     
-    void determinePrerequisites(std::string directoryOfPrerequisiteInformation);
-    
-    void setDependencyName(std::string nameToSetAs);
-    void setIsHead(bool newHeadState);
+    void setGlobalIdentifier(int identifier);
+    void setDependencyName(char* nameToSetAs);
+    char* getDependencyName();
     
 private:
     //Depedency Information
-    std::string name;
-    bool isHead;
-    
-    //Prerequisites associated with this depdendency.
-    bool hasPrerequisites;
-    unsigned int totalPrerequisites;
-    dependency* dependencies;
-    unsigned int dependenciesMemorySize;
-    unsigned int dependenciesAvailableIndex;
-    
+    char* name;
+    int id;
     
 };
 #endif
