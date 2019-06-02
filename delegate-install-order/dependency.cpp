@@ -10,13 +10,13 @@ dependency::dependency()
 {
     isNull = false;
     id = -1;
-    totalPrerequisites = -1;
+    totalPrerequisites = 0;
 }
 dependency::~dependency()
 {
     isNull = false;
     id = 0;
-    totalPrerequisites = -1;
+    totalPrerequisites = 0;
 }
 
 
@@ -34,9 +34,11 @@ void dependency::initializeAsNull(){ isNull = true; }
     || ||  Primal Conviences, Append Information   || ||
     \\ \\                                         // //
 */
-void dependency::appendPrerequisite(int prerequisiteGlobalId){ 
-    totalPrerequisites++; 
-    prerequisiteGlobalIdentifier[totalPrerequisites] = prerequisiteGlobalId; }
+void dependency::appendPrerequisite(int prerequisiteGlobalId)
+{ 
+    prerequisiteGlobalIdentifier[totalPrerequisites] = prerequisiteGlobalId;
+    totalPrerequisites++;
+}
 
 /*
     // //                                      \\ \\
