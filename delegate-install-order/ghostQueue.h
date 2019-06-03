@@ -12,8 +12,9 @@ public:
     void appendToEnd(int globalId, int level);
     bool contains(int globalId);
     int getQueueLength();
-    std::pair<int, int> getDependencySecondToLastDepth();
     std::pair<int, int> getDependencyAtDepth(int depth);
+    void removeTailEnd();
+    //std::pair<int, int> getParentGlobalIdOfTailEnd();
     
 private:
     bool isNull;
