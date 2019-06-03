@@ -212,20 +212,37 @@ if(headDependencyListTextFile.is_open() == true)
     || ||   Generate Queues   || ||
     \\ \\                    // //
 */
-ghostqueue* ghostQueues = (ghostqueue*)malloc(100000 * sizeof(ghostqueue));
+ghostqueue* generatedGhostQueues = (ghostqueue*)malloc(100000 * sizeof(ghostqueue));
 int ghostQueuesSize = 0;
 
 //Generate the expected zero level queues per one head.
 for(int a = 0; a < headDependenciesGlobalIdentifierSize-1; a++)
 {
     ghostqueue headToTailQueue = determineGlobalIdPerDepthEveryLevelZero(headDependenciesGlobalIdentifier[a]);
-    ghostQueues[ghostQueuesSize] = headToTailQueue;
+    generatedGhostQueues[ghostQueuesSize] = headToTailQueue;
     ghostQueuesSize += 1;
     
     bool keep_looping = true;
     while(keep_looping == true)
     {
+        //Referencing the following headToTailQueue
+        ghostqueue lastGeneratedQueue = generatedGhostQueues[ghostQueuesSize];
         
+        //Get the dependency global identifier before the last depth (second to last depth).
+        if(lastGeneratedQueue.getQueueLength() > 1)//if second to last depth is the head dependency
+        {
+            std::pair<int,int> secondToLastglobalIdAndLevel = lastGeneratedQueue.getDependencySecondToLastDepth();
+            //if second to last dependency has a higher(number) prerequisite level than the current level then append second to last dependency' higher (number) level
+                //loop to the deepest depth of the second to last' next level' dependency prerequisites (ignoring already virtually "installed" dependencies), appending each successive dependency global identifier per loop.
+            
+            //else if second to last dependency has no level higher(number) dependency then the last ghost queue then complete this queue with a (one) removed tail end(dependency will be registered to a virtual "installed" list to prevent traversing again (infinite recursion prevention).
+            
+            
+        }else if(lastGeneratedQueue.getQueueLength() == 1)
+        {
+            //Head dependency reached (stop generating for this head)
+            //TODO: ^
+        }
     }
 }
 

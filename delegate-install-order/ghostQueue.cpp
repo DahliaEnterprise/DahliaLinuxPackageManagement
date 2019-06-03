@@ -33,6 +33,18 @@ bool ghostqueue::contains(int globalId)
     }
     return output;
 }
+int ghostqueue::getQueueLength()
+{
+    return headToTailGlobalIdentifiers.size();
+}
+
+std::pair<int, int> ghostqueue::getDependencySecondToLastDepth()
+{
+    int globalId = headToTailGlobalIdentifiers.at(headToTailGlobalIdentifiers.size()-2);
+    int level = headToTailLevels.at(headToTailLevels.size()-2);
+    return std::pair<int, int>(globalId, level);
+}
+
 void ghostqueue::managePotentialDuplicate(int globalId, int level)
 {
     //Detect if this global id has been included before.
