@@ -42,3 +42,8 @@ std::pair<int, int> ghostqueue::getDependencySecondToLastDepth()
     return std::pair<int, int>(globalId, level);
 }
 
+std::pair<int, int> ghostqueue::getDependencyAtDepth(int depth)
+{
+    std::pair<int, int> output(headToTailGlobalIdentifiers[depth], headToTailLevels[depth]);
+    return output;
+}

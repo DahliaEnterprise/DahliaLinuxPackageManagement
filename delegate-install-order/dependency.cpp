@@ -46,10 +46,7 @@ void dependency::appendPrerequisite(int prerequisiteGlobalId)
     \\ \\                                      // //
 */
 void dependency::setGlobalIdentifier(int identifier){ id = identifier; }
-void dependency::setDependencyName(char* nameToSetAs)
-{
-    strcpy(name, nameToSetAs);
-}
+void dependency::setDependencyName(char* nameToSetAs){ strcpy(name, nameToSetAs); }
 
 
 /*
@@ -77,4 +74,3 @@ bool dependency::containsPrerequisite(int suspectPrerequisiteGlobalIdentifier)
     }
     return output;
 }
-    

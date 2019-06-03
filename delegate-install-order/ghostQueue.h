@@ -13,6 +13,7 @@ public:
     bool contains(int globalId);
     int getQueueLength();
     std::pair<int, int> getDependencySecondToLastDepth();
+    std::pair<int, int> getDependencyAtDepth(int depth);
     
 private:
     bool isNull;

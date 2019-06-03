@@ -40,10 +40,11 @@ ghostqueue determineGlobalIdPerDepthEveryLevelZero(int headDependencyGlobalIdent
     int previousDepthsPrerequisiteGlobalIdentifier = -1;//keeps state
     
     int totalPrerequisites = getDependencyByGlobalId(headDependencyGlobalIdentifier).getTotalPrerequisites();
-    int normalizedTotalPrerequisites =  (totalPrerequisites-1) == 0 ? 1 : totalPrerequisites-1;
+    int normalizedTotalPrerequisites =  (totalPrerequisites-1) == 0 ? 1 : (totalPrerequisites-1);
     if(normalizedTotalPrerequisites > 0)
     {
         previousDepthsPrerequisiteGlobalIdentifier = headDependencyGlobalIdentifier;
+        std::cout << previousDepthsPrerequisiteGlobalIdentifier << " " << getDependencyByGlobalId(headDependencyGlobalIdentifier).getDependencyName() << "\n";
         //ghost queue, append to queue
         newQueue.appendToEnd(headDependencyGlobalIdentifier, 0);
     }
@@ -56,10 +57,26 @@ ghostqueue determineGlobalIdPerDepthEveryLevelZero(int headDependencyGlobalIdent
         if(prerequisite.getIsNull() == false)
         {
             previousDepthsPrerequisiteGlobalIdentifier = prerequisite.getPrerequisiteGlobalIdentifierByLevel(0);
-            //ghost queue, append to queue
-            bool containsDependency = newQueue.contains(headDependencyGlobalIdentifier);
-            if(containsDependency == true){ keep_looping = false; }
-            newQueue.appendToEnd(headDependencyGlobalIdentifier, 0);
+            
+            int totalPrerequisites = getDependencyByGlobalId(previousDepthsPrerequisiteGlobalIdentifier).getTotalPrerequisites();
+            int normalizedTotalPrerequisites =  (totalPrerequisites-1) == 0 ? 1 : (totalPrerequisites-1);
+            if(normalizedTotalPrerequisites > 0)
+            {
+                
+                //ghost queue, append to queue
+                bool containsDependency = newQueue.contains(prerequisite.getPrerequisiteGlobalIdentifierByLevel(0));
+                if(containsDependency == true){ keep_looping = false; }else{
+                    for(int i = 0; i < newQueue.getQueueLength(); i++)
+                    {
+                        std::cout << " ";
+                    }
+                    std::cout << prerequisite.getPrerequisiteGlobalIdentifierByLevel(0) << " " << getDependencyByGlobalId(prerequisite.getPrerequisiteGlobalIdentifierByLevel(0)).getDependencyName() <<"\n";
+                    newQueue.appendToEnd(prerequisite.getPrerequisiteGlobalIdentifierByLevel(0), 0); }
+            }else if(normalizedTotalPrerequisites == 0)
+            {
+                keep_looping = false;
+            }
+            
         }else if(prerequisite.getIsNull() == true)
         {
             keep_looping = false;
@@ -227,11 +244,22 @@ for(int a = 0; a < headDependenciesGlobalIdentifierSize-1; a++)
     generatedGhostQueues[ghostQueuesSize] = headToTailQueue;
     ghostQueuesSize += 1;
     
-    bool keep_looping = true;
+    bool keep_looping = false;
     while(keep_looping == true)
     {
+        ghostqueue newQueue;
+        
         //Referencing the following headToTailQueue
         ghostqueue lastGeneratedQueue = generatedGhostQueues[ghostQueuesSize-1];
+        
+        //Initialize newQueue with lastGeneratedQueue data.
+        int normalizedQueueLength = (lastGeneratedQueue.getQueueLength()-1 == 0) ? 1 : lastGeneratedQueue.getQueueLength()-1;
+        for(int b = 0; b < normalizedQueueLength; b++)
+        {
+            //TODO iterate through lastGeneratedQueue and append to newqueue
+            std::cout << std::get<0>(lastGeneratedQueue.getDependencyAtDepth(b)) << "\n";
+            std::cout << std::get<1>(lastGeneratedQueue.getDependencyAtDepth(b)) << "\n\n";
+        }
         
         //Get the dependency global identifier before the last depth (second to last depth).
         //std::cout << lastGeneratedQueue.getQueueLength() << "\n";
@@ -243,12 +271,32 @@ for(int a = 0; a < headDependenciesGlobalIdentifierSize-1; a++)
             //if second to last dependency has a higher(number) prerequisite level than the current level then append second to last dependency' higher (number) level
             dependency secondToLastDependency = getDependencyByGlobalId(secondToLastglobalId);
             int proposedNextLevel = secondToLastLevel + 1;
-            int normalizedTotalPrerequisites = (secondToLastDependency.getTotalPrerequisites()-1 == 0) ? 1 : (int)(secondToLastDependency.getTotalPrerequisites()-1);
+            int normalizedTotalPrerequisites = (secondToLastDependency.getTotalPrerequisites()-1 == 0) ? 1 : (secondToLastDependency.getTotalPrerequisites()-1);
             if(proposedNextLevel <= normalizedTotalPrerequisites)
             {
                 //loop to the deepest depth of the second to last' next level' dependency prerequisites (ignoring already virtually "installed" dependencies), appending each successive dependency global identifier per loop.
                 std::cout << "next level yes\n";
-                
+                /* muted:
+                int secondToLastDependency_nextLevelGlobalId = secondToLastDependency.getPrerequisiteGlobalIdentifierByLevel(proposedNextLevel);
+                int previousDepthsPrerequisiteGlobalIdentifier = secondToLastDependency_nextLevelGlobalId;
+                bool keep_traversing_depth = true;
+                while(keep_traversing_depth == true)
+                {
+                    //Is there a next depth as indicated by the existance of a first level prerequisite of the dependency.
+                    dependency prerequisite = getDependencyByGlobalId(previousDepthsPrerequisiteGlobalIdentifier);
+                    if(prerequisite.getIsNull() == false)
+                    {
+                        previousDepthsPrerequisiteGlobalIdentifier = prerequisite.getPrerequisiteGlobalIdentifierByLevel(0);
+                        //ghost queue, append to queue
+                        bool containsDependency = newQueue.contains(headDependencyGlobalIdentifier);
+                        if(containsDependency == true){ keep_traversing_depth = false; }
+                        newQueue.appendToEnd(headDependencyGlobalIdentifier, 0);
+                    }else if(prerequisite.getIsNull() == true)
+                    {
+                        keep_traversing_depth = false;
+                    }
+                }
+                */
             }else if(proposedNextLevel > normalizedTotalPrerequisites)
             {
                 std::cout << "last level\n";

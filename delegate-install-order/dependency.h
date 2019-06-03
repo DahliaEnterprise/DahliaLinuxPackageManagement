@@ -19,6 +19,7 @@ public:
     int getTotalPrerequisites();
     int getPrerequisiteGlobalIdentifierByLevel(int level);
     bool containsPrerequisite(int prerequisiteGlobalIdentifier);
+    std::pair<int, int> getDependencyAtDepth(int depth);
     
 private:
     bool isNull;
