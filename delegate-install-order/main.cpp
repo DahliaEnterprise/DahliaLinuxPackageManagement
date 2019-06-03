@@ -240,22 +240,28 @@ int anticipatedMaxDepth = 5;
 //main level
 for(int a = 0; a < getDependencyByGlobalId(headDependenciesGlobalIdentifier[0]).getTotalPrerequisites(); a++)
 {
+    std::cout << getDependencyByGlobalId(headDependenciesGlobalIdentifier[0]).getDependencyName() << "\n";
     //second level
     dependency secondLevel = getDependencyByGlobalId( getDependencyByGlobalId(headDependenciesGlobalIdentifier[0]).getPrerequisiteGlobalIdentifierByLevel(a) );
     if(secondLevel.getTotalPrerequisites() > 0)
     {
+        std::cout << "--" <<secondLevel.getDependencyName() << "\n";
         for(int b = 0; b < secondLevel.getTotalPrerequisites(); b++)
         {
-            
             dependency thirdLevel = getDependencyByGlobalId(secondLevel.getPrerequisiteGlobalIdentifierByLevel(b));
             for(int c = 0; c < thirdLevel.getTotalPrerequisites(); c++)
             {
+                std::cout << "---" << thirdLevel.getDependencyName() << "\n";
                 dependency fourthLevel = getDependencyByGlobalId(thirdLevel.getPrerequisiteGlobalIdentifierByLevel(c));
-                
                 for(int d = 0; d < fourthLevel.getTotalPrerequisites(); d++)
                 {
+                    std::cout << "----" << fourthLevel.getDependencyName() << "\n";
                     dependency fifthLevel = getDependencyByGlobalId(fourthLevel.getPrerequisiteGlobalIdentifierByLevel(d));
-                    std::cout << a << " " << b << " " << c << " " << d << "\n";
+                    for(int e = 0; e < fifthLevel.getTotalPrerequisites(); e++)
+                    {
+                        std::cout << "-----" << fifthLevel.getDependencyName() << "\n";
+                        
+                    }
                 }
             }
         }
