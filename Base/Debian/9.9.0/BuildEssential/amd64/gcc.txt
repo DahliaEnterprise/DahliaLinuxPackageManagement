@@ -1,2 +1,2 @@
- cpp
- gcc-6
+cpp
+gcc-6

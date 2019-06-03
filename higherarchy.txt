@@ -3,7 +3,6 @@ dpkg-dev
   libc6
    libgcc1
     gcc-6-base
-   libc6
   zlib1g 
 
  bzip2
