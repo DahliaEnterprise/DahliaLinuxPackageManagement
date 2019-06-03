@@ -14,9 +14,8 @@ int headDependenciesGlobalIdentifier[100];
 int headDependenciesGlobalIdentifierSize = 0;
 int tailDependenciesGlobalIdentifier[100];
 int tailDependenciesGlobalIdentifierSize = 0;
-int dependenciesNotYetIncluded[100];
-int dependenciesNotYetIncludedSize = 0;
-
+int uniqueDependenciesGlobalIdentifier[100]; ///tracks what dependencies have been "installed".
+int uniqueDependenciesGlobalIdentifierSize = 0;
 
 dependency getDependencyByGlobalId(int globalId)
 {
@@ -66,6 +65,19 @@ int determineDeepestDepthOfEveryLevelAsZero()
 
     deepestDepthFound = currentBreadcrumbProcessDepth;
     output = deepestDepthFound;
+    return output;
+}
+
+bool uniqueDependenciesGlobalIdentifierContainsGlobalId(int globalId)
+{
+    bool output = false;
+    for(int a = 0; a < uniqueDependenciesGlobalIdentifierSize-1; a++)
+    {
+        if(uniqueDependenciesGlobalIdentifier[a] != globalId)
+        {
+            output = true;
+        }
+    }
     return output;
 }
 
@@ -216,13 +228,6 @@ for(int i = 0; i < entireDependencyListSize-1; i++)
     }
 }
 
-//Populate dependenciesNotYetIncluded list
-for(int i = 0; i < dependenciesNotYetIncludedSize; i++)
-{
-    dependenciesNotYetIncluded[i] = entireDependencyList[i].getGlobalIdentifier();
-    dependenciesNotYetIncludedSize += 1;
-}
-
 
 //Trail Generation will require a class too complex for functions in main.cpp alone...
 //(Trail generation will only be aware of one head dependency, this can be re-ran again later made as a function for other starting heads)
@@ -231,6 +236,7 @@ for(int i = 0; i < dependenciesNotYetIncludedSize; i++)
 
 //end while
 
+/*
 int anticipatedMaxDepth = 5;
 //has 0 0 0 0 0 been done before? no? add it
 //    1 1 2 3 5
@@ -240,26 +246,26 @@ int anticipatedMaxDepth = 5;
 //main level
 for(int a = 0; a < getDependencyByGlobalId(headDependenciesGlobalIdentifier[0]).getTotalPrerequisites(); a++)
 {
-    std::cout << getDependencyByGlobalId(headDependenciesGlobalIdentifier[0]).getDependencyName() << "\n";
+    std::cout << getDependencyByGlobalId(headDependenciesGlobalIdentifier[0]).getDependencyName() << " ";
     //second level
     dependency secondLevel = getDependencyByGlobalId( getDependencyByGlobalId(headDependenciesGlobalIdentifier[0]).getPrerequisiteGlobalIdentifierByLevel(a) );
     if(secondLevel.getTotalPrerequisites() > 0)
     {
-        std::cout << "--" <<secondLevel.getDependencyName() << "\n";
+        std::cout << secondLevel.getDependencyName() << " ";
         for(int b = 0; b < secondLevel.getTotalPrerequisites(); b++)
         {
             dependency thirdLevel = getDependencyByGlobalId(secondLevel.getPrerequisiteGlobalIdentifierByLevel(b));
             for(int c = 0; c < thirdLevel.getTotalPrerequisites(); c++)
             {
-                std::cout << "---" << thirdLevel.getDependencyName() << "\n";
+                std::cout << thirdLevel.getDependencyName() << " ";
                 dependency fourthLevel = getDependencyByGlobalId(thirdLevel.getPrerequisiteGlobalIdentifierByLevel(c));
                 for(int d = 0; d < fourthLevel.getTotalPrerequisites(); d++)
                 {
-                    std::cout << "----" << fourthLevel.getDependencyName() << "\n";
+                    std::cout << fourthLevel.getDependencyName() << " ";
                     dependency fifthLevel = getDependencyByGlobalId(fourthLevel.getPrerequisiteGlobalIdentifierByLevel(d));
                     for(int e = 0; e < fifthLevel.getTotalPrerequisites(); e++)
                     {
-                        std::cout << "-----" << fifthLevel.getDependencyName() << "\n";
+                        std::cout << fifthLevel.getDependencyName() << "\n";
                         
                     }
                 }
@@ -269,9 +275,23 @@ for(int a = 0; a < getDependencyByGlobalId(headDependenciesGlobalIdentifier[0]).
     
     std::cout << "\n";
 }
+*/
 
-
-
+int sublevelPerDepthState[5] = {-1,-1,-1,-1,-1};
+for(int a = 0; a < headDependenciesGlobalIdentifierSize-1; a++)
+{
+    dependency headDep = getDependencyByGlobalId(headDependenciesGlobalIdentifier[a]);
+    int totalPrerequisites = headDep.getTotalPrerequisites();
+    if(totalPrerequisites > 0)
+    {
+        //Initialize sublevelPerDepthState
+        
+        //Iterate through sublevelPerDepthState (with possible assistance from uniqueDependenciesGlobalIdentifier (dependencies already "installled")
+    }else if(totalPrerequisites == 0)
+    {
+        std::cout << "head contained no prereuiquisites\n":
+    }
+}
 
 
 //TODO: Loop through each trail and print out its, trail of breadcrumb information.
