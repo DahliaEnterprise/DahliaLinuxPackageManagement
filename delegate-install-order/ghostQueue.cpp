@@ -14,9 +14,6 @@ void ghostqueue::appendToEnd(int globalId, int level)
 {
     headToTailGlobalIdentifiers.push_back(globalId);
     headToTailLevels.push_back(level);
-    
-    
-    //this->managePotentialDuplicate(globalId, level);
 }
 
 bool ghostqueue::contains(int globalId)
@@ -45,10 +42,3 @@ std::pair<int, int> ghostqueue::getDependencySecondToLastDepth()
     return std::pair<int, int>(globalId, level);
 }
 
-void ghostqueue::managePotentialDuplicate(int globalId, int level)
-{
-    //Detect if this global id has been included before.
-    
-    
-    //
-}

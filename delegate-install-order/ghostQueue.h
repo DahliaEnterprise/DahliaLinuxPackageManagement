@@ -22,8 +22,5 @@ private:
     
     std::vector< std::pair<int, std::vector< std::pair<int, std::vector<int> > > > >  duplicates;
     //   vector(      pair(depth,    vector(      pair(gId      vector(level) ) ) ) )
-    
-    
-    void managePotentialDuplicate(int globalId, int level);
 };
 #endif
