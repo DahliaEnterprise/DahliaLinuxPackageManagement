@@ -18,6 +18,7 @@ public:
     int getGlobalIdentifier();
     int getTotalPrerequisites();
     int getPrerequisiteGlobalIdentifierByLevel(int level);
+    bool containsPrerequisite(int prerequisiteGlobalIdentifier);
     
 private:
     bool isNull;

@@ -1,0 +1,42 @@
+dpkg-dev
+ binutils
+  libc6
+   libgcc1
+    gcc-6-base
+   libc6
+  zlib1g 
+
+ bzip2
+  libbz2-1.0
+   libc6
+    libgcc1
+     gcc-6-base
+  libc6
+   libgcc1
+    gcc-6-base
+
+ libdpkg-perl
+  dpkg
+   libbz2-1.0
+   libc6
+    libgcc1
+     gcc-6-base
+   libc6
+   liblzma5
+   libselinux1
+   zlib1g
+   tar
+  perl
+
+ make
+ patch
+ perl
+ tar
+ xz-utils
+ gpp
+libc6-dev
+gcc
+make
+
+
+ 						IT GOES BACK(towards root) WHEN IT REACHES THE END OF THE SUBLEVEL AND GOES FORWARD(away from root) WHEN THAT HASEN"T BEEN INSTALLED

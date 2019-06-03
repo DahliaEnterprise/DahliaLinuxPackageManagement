@@ -62,3 +62,19 @@ char* dependency::getDependencyName(){ return name; }
 int dependency::getGlobalIdentifier(){ return id; }
 int dependency::getTotalPrerequisites(){ return totalPrerequisites; }
 int dependency::getPrerequisiteGlobalIdentifierByLevel(int level){ return prerequisiteGlobalIdentifier[level]; }
+bool dependency::containsPrerequisite(int suspectPrerequisiteGlobalIdentifier)
+{
+    bool output = false;
+    for(int i = 0; i < totalPrerequisites-1; i++)
+    {
+        if(prerequisiteGlobalIdentifier[i] == suspectPrerequisiteGlobalIdentifier)
+        {
+            output = true;
+            
+            //end for loop
+            i = totalPrerequisites;
+        }
+    }
+    return output;
+}
+    

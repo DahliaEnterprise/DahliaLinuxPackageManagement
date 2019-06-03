@@ -6,9 +6,6 @@
 #include <dirent.h>
 #include <sys/types.h>
 #include "dependency.cpp"
-#include "breadcrumb.cpp"
-#include "breadcrumb_trail.cpp"
-
 
 dependency entireDependencyList[100];
 int entireDependencyListSize = 0;
@@ -17,6 +14,9 @@ int headDependenciesGlobalIdentifier[100];
 int headDependenciesGlobalIdentifierSize = 0;
 int tailDependenciesGlobalIdentifier[100];
 int tailDependenciesGlobalIdentifierSize = 0;
+int dependenciesNotYetIncluded[100];
+int dependenciesNotYetIncludedSize = 0;
+
 
 dependency getDependencyByGlobalId(int globalId)
 {
@@ -205,7 +205,7 @@ if(headDependencyListTextFile.is_open() == true)
     
 //Determine tail of dependencies
 //loop through entireDependencyList, storing the global identifiers of prerequisites that have no dependencies.
-for(int i = 0; i < entireDependencyListSize; i++)
+for(int i = 0; i < entireDependencyListSize-1; i++)
 {
     dependency prerequisite = entireDependencyList[i];
     if(prerequisite.getTotalPrerequisites() == 0)
@@ -216,8 +216,60 @@ for(int i = 0; i < entireDependencyListSize; i++)
     }
 }
 
-//For every tail end: establish a breadcrumb(level 0) trail to the head(level 0).
+//Populate dependenciesNotYetIncluded list
+for(int i = 0; i < dependenciesNotYetIncludedSize; i++)
+{
+    dependenciesNotYetIncluded[i] = entireDependencyList[i].getGlobalIdentifier();
+    dependenciesNotYetIncludedSize += 1;
+}
 
+
+//Trail Generation will require a class too complex for functions in main.cpp alone...
+//(Trail generation will only be aware of one head dependency, this can be re-ran again later made as a function for other starting heads)
+//Generate trails, prevent collisions.
+//while keep looping == true
+
+//end while
+
+int anticipatedMaxDepth = 5;
+//has 0 0 0 0 0 been done before? no? add it
+//    1 1 2 3 5
+//has 0 0 0 0 1 been done before? no  add it?
+//    1 1 2 3 5
+
+//main level
+for(int a = 0; a < getDependencyByGlobalId(headDependenciesGlobalIdentifier[0]).getTotalPrerequisites(); a++)
+{
+    //second level
+    dependency secondLevel = getDependencyByGlobalId( getDependencyByGlobalId(headDependenciesGlobalIdentifier[0]).getPrerequisiteGlobalIdentifierByLevel(a) );
+    if(secondLevel.getTotalPrerequisites() > 0)
+    {
+        for(int b = 0; b < secondLevel.getTotalPrerequisites(); b++)
+        {
+            
+            dependency thirdLevel = getDependencyByGlobalId(secondLevel.getPrerequisiteGlobalIdentifierByLevel(b));
+            for(int c = 0; c < thirdLevel.getTotalPrerequisites(); c++)
+            {
+                dependency fourthLevel = getDependencyByGlobalId(thirdLevel.getPrerequisiteGlobalIdentifierByLevel(c));
+                
+                for(int d = 0; d < fourthLevel.getTotalPrerequisites(); d++)
+                {
+                    dependency fifthLevel = getDependencyByGlobalId(fourthLevel.getPrerequisiteGlobalIdentifierByLevel(d));
+                    std::cout << a << " " << b << " " << c << " " << d << "\n";
+                }
+            }
+        }
+    }
     
+    std::cout << "\n";
+}
+
+
+
+
+
+//TODO: Loop through each trail and print out its, trail of breadcrumb information.
+
+    //end of main()
     return 0;
 }
