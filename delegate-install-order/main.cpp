@@ -221,14 +221,22 @@ for(int a = 0; a < headDependenciesGlobalIdentifierSize-1; a++)
     ghostqueue headToTailQueue = determineGlobalIdPerDepthEveryLevelZero(headDependenciesGlobalIdentifier[a]);
     ghostQueues[ghostQueuesSize] = headToTailQueue;
     ghostQueuesSize += 1;
+    
+    bool keep_looping = true;
+    while(keep_looping == true)
+    {
+        
+    }
 }
 
 /* Generate successive queues by the following rules...
  *  Assumption: the last queue has ended with a tail.(finite)(tail indicates no dependencies)
  *  Get the dependency before the last depth, (2nd2Last)
- *      if 2nd2Last has a level higher(number) dependency then the last ghost queue
+ *      if   2nd2Last has a level higher(number) dependency then the last ghost queue
  *      then append 2nd2Last' next level' dependency to ghost queue
- *      if 2nd2Last has no level higher(number) dependency then the last ghost queue
+ *                loop to deepest depth of 2nd2Last' next level' dependency' prerequisites (ignoring already virtually "installed" dependencies),
+ *                appending each successive depedency global identifier per loop.
+ *      else if 2nd2Last has no level higher(number) dependency then the last ghost queue
  *      then complete this queue with a (one) removed tail end(dependency will be registered to a virtual "installed" listed to prevent traversing again (infinite recursion prevetion)).
  * Stop generating when the last generated ghost queue is reduced down to the head dependency.
  */
