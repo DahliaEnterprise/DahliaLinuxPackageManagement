@@ -269,43 +269,58 @@ ghostqueue headToTailQueue = determineGlobalIdPerDepthEveryLevelZero(headDepende
 generatedGhostQueues[ghostQueuesSize] = headToTailQueue;
 ghostQueuesSize += 1;
 
-ghostqueue newQueue;
-ghostqueue lastGeneratedQueue = generatedGhostQueues[ghostQueuesSize-1];
+bool keep_generating = true;
+while(keep_generating == true)
+{
+    ghostqueue newQueue;
+    ghostqueue lastGeneratedQueue = generatedGhostQueues[ghostQueuesSize-1];
 
-
-//[1]
-//Initialize newQueue with lastGeneratedQueue data.
-int normalizedQueueLength = (lastGeneratedQueue.getQueueLength()-1 == 0) ? 1 : lastGeneratedQueue.getQueueLength()-1; for(int b = 0; b < normalizedQueueLength; b++){ newQueue.appendToEnd(std::get<0>(lastGeneratedQueue.getDependencyAtDepth(b)), std::get<1>(lastGeneratedQueue.getDependencyAtDepth(b))); }
-
-int depthOfparentOfTail = (lastGeneratedQueue.getQueueLength()-1 == 0) ? 1 : lastGeneratedQueue.getQueueLength()-1; depthOfparentOfTail = (depthOfparentOfTail-1 == 0) ? 1 : depthOfparentOfTail-1;
-dependency parentDependencyOfTail = getDependencyByGlobalId(std::get<0>(lastGeneratedQueue.getDependencyAtDepth(depthOfparentOfTail)));
-std::cout << parentDependencyOfTail.getDependencyName() << "\n";
-    //[1-1]
-    /*get last processed dependency level at depth of parent-of-tail*/
-    int lastProcessedLevel = std::get<1>(lastGeneratedQueue.getDependencyAtDepth(depthOfparentOfTail));
-    int proposedNextLevel = lastProcessedLevel + 1;
-    /* determine if the next level exists */
-    int zeroIndexBasedTotalPrerequisites = (parentDependencyOfTail.getTotalPrerequisites()-1 == 0) ? 1 : parentDependencyOfTail.getTotalPrerequisites()-1;
-    std::cout << proposedNextLevel << " <= " << zeroIndexBasedTotalPrerequisites << "\n";
-    
-    if(proposedNextLevel < zeroIndexBasedTotalPrerequisites)
+    //[1]
+    //Normalized Queue Length
+    int normalizedQueueLength = (lastGeneratedQueue.getQueueLength()-1 == 0) ? 1 : lastGeneratedQueue.getQueueLength()-1;
+    if(normalizedQueueLength > 1)
     {
-        //Next level exists
-        //TODO: check if this dependency has been "virtually installed" already.
-        //increase level of the depth
-        newQueue.setLevelAtDepth(proposedNextLevel, depthOfparentOfTail);
-        //TODO: continue appending to deepest depth available for this next level.
-        std::cout << proposedNextLevel << " " << depthOfparentOfTail << getDependencyByGlobalId(std::get<0>(lastGeneratedQueue.getDependencyAtDepth(lastProcessedLevel))).getDependencyName() << "\n";
-    }else if(proposedNextLevel >= zeroIndexBasedTotalPrerequisites)
-    //[1-2]
+        //Initialize newQueue with lastGeneratedQueue data.
+        for(int b = 0; b < lastGeneratedQueue.getQueueLength(); b++){ newQueue.appendToEnd(std::get<0>(lastGeneratedQueue.getDependencyAtDepth(b)), std::get<1>(lastGeneratedQueue.getDependencyAtDepth(b))); std::cout << getDependencyByGlobalId(std::get<0>(lastGeneratedQueue.getDependencyAtDepth(b))).getDependencyName() << " ";  } std::cout << "\n";
+        
+        int depthOfparentOfTail = (lastGeneratedQueue.getQueueLength()-1 == 0) ? 1 : lastGeneratedQueue.getQueueLength()-1; depthOfparentOfTail = (depthOfparentOfTail-1 == 0) ? 1 : depthOfparentOfTail-1;
+        dependency parentDependencyOfTail = getDependencyByGlobalId(std::get<0>(lastGeneratedQueue.getDependencyAtDepth(depthOfparentOfTail)));
+
+        //[1-1]
+        /*get last processed dependency level at depth of parent-of-tail*/
+        int lastProcessedLevel = std::get<1>(lastGeneratedQueue.getDependencyAtDepth(depthOfparentOfTail));
+        int proposedNextLevel = lastProcessedLevel + 1;
+        /* determine if the next level exists */
+        int zeroIndexBasedTotalPrerequisites = (parentDependencyOfTail.getTotalPrerequisites()-1 == 0) ? 1 : parentDependencyOfTail.getTotalPrerequisites()-1;
+        std::cout << zeroIndexBasedTotalPrerequisites << " " << parentDependencyOfTail.getTotalPrerequisites() << " " << parentDependencyOfTail.getDependencyName() << "\n";
+        
+        if(proposedNextLevel < zeroIndexBasedTotalPrerequisites)
+        {
+            //Next level exists
+            //TODO: check if this dependency has been "virtually installed" already.
+            //increase level of the depth
+            newQueue.setLevelAtDepth(proposedNextLevel, depthOfparentOfTail);
+            //TODO: continue appending to deepest depth available for this next level.
+            std::cout << proposedNextLevel << " " << depthOfparentOfTail << getDependencyByGlobalId(std::get<0>(lastGeneratedQueue.getDependencyAtDepth(lastProcessedLevel))).getDependencyName() << "\n";
+        }else if(proposedNextLevel >= zeroIndexBasedTotalPrerequisites)
+        //[1-2]
+        {
+            //The last level processed was the last level of the dependency at this depth, remove this depth as an indicator of finished dependency at this depth.
+            int depthOfTail = (newQueue.getQueueLength()-1 == 0) ? 1 : newQueue.getQueueLength()-1;
+            newQueue.removeDependencyAtDepth(depthOfTail);
+            //std::cout << "removed depdenency at depth:" << depthOfparentOfTail << "\n";
+        }
+    }else if(normalizedQueueLength == 1)
     {
-        //The last level processed was the last level of the dependency at this depth, remove this depth as an indicator of finished.
-        newQueue.removeDependencyAtDepth(depthOfparentOfTail);
-        std::cout << "removed depdenency at depth:" << depthOfparentOfTail << "\n";
+        //Head dependency reached;
+        keep_generating = false;
     }
     
-   
-   
+    generatedGhostQueues[ghostQueuesSize] = newQueue;
+    ghostQueuesSize += 1;   
+
+}
+    
 //TODO: Loop through each trail and print out its, trail of breadcrumb information.
 
     //end of main()
