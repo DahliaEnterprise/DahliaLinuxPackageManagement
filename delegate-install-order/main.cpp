@@ -10,9 +10,14 @@ int main(int argc, char *argv[])
 
     //Convert manifest text file into list of objects(with id and dependency names)
     entireDependencyList* manifest = new entireDependencyList();
+    manifest->initialize();
     manifest->forEveryLineInManifest_thenAppendToArrayWithUniqueId(manifestLocation);
 
+    //Determine head dependencies using the "BuildEssentail_amd64" text file.
+    manifest->determineAndFlagHeadDependencies(completeLocationToPackageHead);
 
+    //Free
+    delete manifest;
 
     return 0;
 }
