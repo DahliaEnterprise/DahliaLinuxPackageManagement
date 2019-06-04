@@ -14,6 +14,8 @@ public:
     int getQueueLength();
     std::pair<int, int> getDependencyAtDepth(int depth);
     void removeTailEnd();
+    void setLevelAtDepth(int setLevelAs, int depthToSetLevel);
+    void removeDependencyAtDepth(int depth);
     //std::pair<int, int> getParentGlobalIdOfTailEnd();
     
 private:
