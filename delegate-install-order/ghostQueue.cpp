@@ -48,9 +48,10 @@ void ghostqueue::removeTailEnd()
     headToTailLevels.pop_back();
 }
 
-void ghostqueue::setLevelAtDepth(int setLevelAs, int depthToSetLevel)
+void ghostqueue::setLevelAtDepth(int setGlobalIdAs, int setLevelAs, int depth)
 {
-    headToTailLevels[depthToSetLevel] = setLevelAs;
+    headToTailGlobalIdentifiers[depth] = setGlobalIdAs;
+    headToTailLevels[depth] = setLevelAs;
 }
 
 void ghostqueue::removeDependencyAtDepth(int depth)
@@ -58,16 +59,3 @@ void ghostqueue::removeDependencyAtDepth(int depth)
     headToTailGlobalIdentifiers.erase(headToTailGlobalIdentifiers.begin()+depth);
     headToTailLevels.erase(headToTailLevels.begin()+depth);
 }
-
-/*
-std::pair<int, int> ghostqueue::getParentGlobalIdOfTailEnd()
-{
-    int zeroIndexBasedQueueLength = (headToTailGlobalIdentifiers.size()-1 == 0) ? 1 : headToTailGlobalIdentifiers.size()-1;
-    int indexOfParentOfTail = (zeroIndexBasedQueueLength-1 < 0) ? 0 : zeroIndexBasedQueueLength-1;
-    int globalIdOfParentOfTail = headToTailGlobalIdentifiers[indexOfParentOfTail];
-    
-    
-    
-    return std::pair<int, int>(headToTailGlobalIdentifiers[normalizedQueueLength], headToTailLevels[normalizedQueueLength]);
-}
-*/

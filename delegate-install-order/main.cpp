@@ -22,15 +22,27 @@ bool dependencyIsVirtuallyInstalled(int globalId)
 {
     bool output = false;
     bool contains = false;
-    for(int a = 0; a < dependenciesVirtuallyInstalledListSize; a++)
+    int dependenciesVirtuallyInstalledListSizeNormalized = (dependenciesVirtuallyInstalledListSize-1 == 0) ? 1 : dependenciesVirtuallyInstalledListSize-1;
+    for(int a = 0; a < dependenciesVirtuallyInstalledListSizeNormalized; a++)
     {
         if(dependenciesVirtuallyInstalledList[a] == globalId)
         {
             contains = true;
+            a = dependenciesVirtuallyInstalledListSize;
         }
     }
-    contains = output;
+    output = contains;
     return output;
+}
+
+void addDependencyToVirtuallyInstalledList(int globalId)
+{
+    //Check if this dependency is already in list.
+    if(dependencyIsVirtuallyInstalled(globalId) == false)
+    {
+        dependenciesVirtuallyInstalledList[dependenciesVirtuallyInstalledListSize] = globalId;
+        dependenciesVirtuallyInstalledListSize += 1;
+    }
 }
 
 dependency getDependencyByGlobalId(int globalId)
@@ -63,6 +75,7 @@ ghostqueue determineGlobalIdPerDepthEveryLevelZero(int headDependencyGlobalIdent
         //std::cout << previousDepthsPrerequisiteGlobalIdentifier << " " << getDependencyByGlobalId(headDependencyGlobalIdentifier).getDependencyName() << "\n";
         //ghost queue, append to queue
         newQueue.appendToEnd(headDependencyGlobalIdentifier, 0);
+        addDependencyToVirtuallyInstalledList(headDependencyGlobalIdentifier);
     }
 
     bool keep_looping = true;
@@ -85,6 +98,7 @@ ghostqueue determineGlobalIdPerDepthEveryLevelZero(int headDependencyGlobalIdent
                 }else if(containsDependency == false)
                 { 
                     newQueue.appendToEnd(prerequisite.getPrerequisiteGlobalIdentifierByLevel(0), 0); 
+                    addDependencyToVirtuallyInstalledList(prerequisite.getPrerequisiteGlobalIdentifierByLevel(0));
                     for(int i = 0; i < newQueue.getQueueLength(); i++)
                     {
                         //std::cout << " ";
@@ -94,6 +108,7 @@ ghostqueue determineGlobalIdPerDepthEveryLevelZero(int headDependencyGlobalIdent
             }else if(totalPrerequisites == 0)
             {
                 newQueue.appendToEnd(prerequisite.getPrerequisiteGlobalIdentifierByLevel(0), 0); 
+                addDependencyToVirtuallyInstalledList(prerequisite.getPrerequisiteGlobalIdentifierByLevel(0));
                 keep_looping = false;
             }
             
@@ -282,8 +297,8 @@ for(int a = 0; a < headDependenciesGlobalIdentifierSize-1; a++)
         ghostqueue newQueue;
         ghostqueue lastGeneratedQueue = generatedGhostQueues[ghostQueuesSize-1];
         //Initialize newQueue with lastGeneratedQueue data.
-        for(int b = 0; b < lastGeneratedQueue.getQueueLength(); b++){ newQueue.appendToEnd(std::get<0>(lastGeneratedQueue.getDependencyAtDepth(b)), std::get<1>(lastGeneratedQueue.getDependencyAtDepth(b))); std::cout << getDependencyByGlobalId(std::get<0>(lastGeneratedQueue.getDependencyAtDepth(b))).getDependencyName() << " ";  } std::cout << "\n";
-
+        for(int b = 0; b < lastGeneratedQueue.getQueueLength(); b++){ newQueue.appendToEnd(std::get<0>(lastGeneratedQueue.getDependencyAtDepth(b)), std::get<1>(lastGeneratedQueue.getDependencyAtDepth(b))); }
+        
         //[1]
         //Normalized Queue Length
         int normalizedQueueLength = (lastGeneratedQueue.getQueueLength()-1 == 0) ? 1 : lastGeneratedQueue.getQueueLength()-1;
@@ -298,8 +313,6 @@ for(int a = 0; a < headDependenciesGlobalIdentifierSize-1; a++)
             int proposedNextLevel = lastProcessedLevel + 1;
             /* determine if the next level exists */
             int zeroIndexBasedTotalPrerequisites = (parentDependencyOfTail.getTotalPrerequisites()-1 == 0) ? 1 : parentDependencyOfTail.getTotalPrerequisites()-1;
-            std::cout << zeroIndexBasedTotalPrerequisites << " " << parentDependencyOfTail.getTotalPrerequisites() << " " << parentDependencyOfTail.getDependencyName() << "\n";
-            
             if(proposedNextLevel < zeroIndexBasedTotalPrerequisites)
             {
                 //Next level exists
@@ -307,14 +320,56 @@ for(int a = 0; a < headDependenciesGlobalIdentifierSize-1; a++)
                 bool dependencyVirtuallyInstalled = dependencyIsVirtuallyInstalled(std::get<0>(newQueue.getDependencyAtDepth(depthOfparentOfTail)));
                 if(dependencyVirtuallyInstalled == false)
                 {
-                    //increase level of the depth
-                    newQueue.setLevelAtDepth(proposedNextLevel, depthOfparentOfTail);
-                    //TODO: continue appending to deepest depth available for this next level.
-                    std::cout << proposedNextLevel << " " << depthOfparentOfTail << getDependencyByGlobalId(std::get<0>(lastGeneratedQueue.getDependencyAtDepth(lastProcessedLevel))).getDependencyName() << "\n";
+                    //increase level of the current depth
+                    //dependency.getPrerequisiteGlobalIdentifierByLevel();
+                    int globalId_forProposedNextLevel = std::get<0>(newQueue.getDependencyAtDepth(proposedNextLevel));
+                    newQueue.setLevelAtDepth(globalId_forProposedNextLevel, proposedNextLevel, depthOfparentOfTail);
+                    addDependencyToVirtuallyInstalledList(globalId_forProposedNextLevel);
+                    
+                    //TODO:continue appending to deepest depth available for this next level.
+                    //check if next depth of newly set level exists.
+                    
+                    bool keep_depthing = false;
+                    while(keep_depthing == true)
+                    {
+                        
+                    }
+                    
+                    //std::cout << proposedNextLevel << " " << depthOfparentOfTail << getDependencyByGlobalId(std::get<0>(lastGeneratedQueue.getDependencyAtDepth(lastProcessedLevel))).getDependencyName() << "\n";
+                
+                    
                 }else if(dependencyVirtuallyInstalled == true)
                 {
                     //Move down to next level (until end of list or an dependency virtually not installed
-                    //TODO: ^
+                    int proposedNextLevelContinued = proposedNextLevel + 1;
+                    bool keep_next_leveling = true;
+                    while(keep_next_leveling == true)
+                    {
+                        if(proposedNextLevelContinued <= zeroIndexBasedTotalPrerequisites)
+                        {
+                            //Next level exists
+                            bool dependencyVirtuallyInstalled = dependencyIsVirtuallyInstalled( getDependencyByGlobalId(std::get<0>(newQueue.getDependencyAtDepth(depthOfparentOfTail))).getPrerequisiteGlobalIdentifierByLevel(proposedNextLevelContinued) );
+                            if(dependencyVirtuallyInstalled == false)
+                            {
+                                //increase level of this depth
+                                int globalId_forProposedNextLevelContinued = std::get<0>(newQueue.getDependencyAtDepth(proposedNextLevelContinued));
+                                newQueue.setLevelAtDepth(globalId_forProposedNextLevelContinued, proposedNextLevelContinued, depthOfparentOfTail);
+                                addDependencyToVirtuallyInstalledList(globalId_forProposedNextLevelContinued);
+                                
+                                //Stop leveling...
+                                keep_next_leveling = false;
+                            }else if(dependencyVirtuallyInstalled == true)
+                            {
+                                //Keep leveling....
+                                proposedNextLevelContinued += 1;
+                            }
+                        }else if(proposedNextLevelContinued > zeroIndexBasedTotalPrerequisites)
+                        {
+                            //The last level processed was the last level of the dependency at this depth, remove this depth as an indicator of finished dependency at this depth.
+                            int depthOfTail = (newQueue.getQueueLength()-1 == 0) ? 1 : newQueue.getQueueLength()-1;
+                            newQueue.removeDependencyAtDepth(depthOfTail);
+                        }
+                    }
                 }
                 
             }else if(proposedNextLevel >= zeroIndexBasedTotalPrerequisites)
@@ -339,6 +394,23 @@ for(int a = 0; a < headDependenciesGlobalIdentifierSize-1; a++)
 }
     
 //TODO: Loop through each trail and print out its, trail of breadcrumb information.
+/*
+for(int a = 0; a < ghostQueuesSize; a++)
+{
+    ghostqueue queue = generatedGhostQueues[a];
+    for(int b = 0; b < queue.getQueueLength(); b++)
+    {
+        std::cout << getDependencyByGlobalId(std::get<0>(queue.getDependencyAtDepth(b))).getDependencyName() << " ";
+    }
+    
+    if(queue.getQueueLength() == 1)
+    {
+        std::cout << "\n\n";
+    }else{
+        std::cout << "\n";
+    }
+}
+*/
 
     //end of main()
     return 0;
