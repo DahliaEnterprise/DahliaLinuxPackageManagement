@@ -1,2 +1,2 @@
 #!/bin/bash
-g++ -std=c++17 main.cpp 
+g++ -Wall -std=c++17 -o ./build_output/DelegateInstallOrder main.cpp
