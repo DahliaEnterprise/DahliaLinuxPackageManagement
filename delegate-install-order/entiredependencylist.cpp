@@ -50,6 +50,7 @@ void entireDependencyList::createDependencyObject(int dependencyId, std::string 
 {
   //create dependency object, assigning id and name.
   dependency* newDep = new dependency();
+  newDep->initialize();
   newDep->setId(dependencyId);
   newDep->setName(dependencyName);
 
@@ -91,7 +92,7 @@ int entireDependencyList::getUniqueIdByDependencyName(std::string dependencyName
 {
   int output = -1;
 
-  for(int a = 0; a < manifestList->size(); a++)
+  for(size_t a = 0; a < manifestList->size(); a++)
   {
     std::pair<int, std::string> dependencyMetadata = manifestList->at(a);
     std::string suspectDependencyName = std::get<1>(dependencyMetadata);
@@ -125,10 +126,10 @@ dependency* entireDependencyList::getDependencyByUniqueId(int uniqueId)
   for(int a = 0; a < normalizedDependencyLength; a++)
   {
     dependency* suspectDependency = dependencyList->at(a);
-    /** TODO: if(suspectDependency->getUniqueId() == uniqueId)
+    if(suspectDependency->getUniqueId() == uniqueId)
     {
       output = suspectDependency;
-    }**/
+    }
   }
   return output;
 }
@@ -161,17 +162,13 @@ void entireDependencyList::assignPrerequisites(std::string directoryOfPackageInf
       char prerequisiteName[100];
       memset(prerequisiteName, '\0', 100);
       prerequisiteListTextFile.getline(prerequisiteName, 100);
-      std::string prerequisiteNameAsString = std::string(prerequisiteName);
-      std::cout << prerequisiteNameAsString << " " << prerequisiteNameAsString.size() << "\n";
       while(strlen(prerequisiteName) > 0)
       {
-        //std::cout << prerequisiteName << "\n";
         //Get the prequisites (manifestList) unique id and append it to the respective dependency object.
         std::string prerequisiteNameAsString = std::string(prerequisiteName);
-        std::cout << "\n" << prerequisiteNameAsString << " " << prerequisiteNameAsString.size() << "\n";
         int prerequisiteUniqueId = this->getUniqueIdByDependencyName(prerequisiteNameAsString);
-        //std::cout << prerequisiteUniqueId << " " << prerequisiteName << "\n";
-        //parentDependency->appendPrerequisite(prerequisiteUniqueId);
+        dependency* parentDependency = this->getDependencyByUniqueId(dependencyId);
+        parentDependency->appendPrerequisite(prerequisiteUniqueId);
 
         //Reset for next iteration of while loop
         memset(prerequisiteName, '\0', 100);

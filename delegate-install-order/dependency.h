@@ -7,10 +7,17 @@ class dependency
 {
 public:
   dependency();
+
+  void initialize();
+
   void setId(int idToSetAs);
+  int getUniqueId();
+
   void setName(std::string nameToSetAs);
   std::string getName();
   void appendPrerequisite(int prerequisiteUniqueId);
+  bool hasPrerequisites();
+  int getPrerequisiteUniqueId(int zeroBasedLevel);
 
 private:
   int uniqueId;

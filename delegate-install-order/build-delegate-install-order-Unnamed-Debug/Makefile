@@ -108,7 +108,8 @@ DIST          = ../main.cpp.DEPRECATED \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/lex.prf \
 		../../delegate-install-order.pro dependency.h \
 		entiredependencylist.h \
-		installorderqueue.h ../main.cpp
+		installorderqueue.h \
+		installorderqueuegenerator.h ../main.cpp
 QMAKE_TARGET  = delegate-install-order
 DESTDIR       = 
 TARGET        = delegate-install-order
@@ -281,7 +282,9 @@ main.o: ../main.cpp ../entiredependencylist.cpp \
 		../dependency.cpp \
 		../dependency.h \
 		../installorderqueue.cpp \
-		../installorderqueue.h
+		../installorderqueue.h \
+		../installorderqueuegenerator.cpp \
+		../installorderqueuegenerator.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../main.cpp
 
 ####### Install
