@@ -18,6 +18,8 @@ public:
   void forEveryLineInManifest_thenAppendToArrayWithUniqueId(std::string fileLocation);
   void determineAndFlagHeadDependencies(std::string fileLocation);
 
+  int getHeadDependencyAt(int index);
+
 
 private:
   std::vector<std::pair<int,std::string>>* manifestList;
@@ -30,6 +32,10 @@ private:
   std::vector<int>* headDependencyList;
 
   int getUniqueIdByDependencyName(std::string dependencyName);
+
+
+  //Convience Assistance
+  int normalizedArrayLength(int length);
 };
 
 #endif // ENTIREDEPENDENCYLIST_H

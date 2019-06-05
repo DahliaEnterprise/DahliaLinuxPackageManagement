@@ -5,11 +5,15 @@ CONFIG -= qt
 
 SOURCES += main.cpp \
     dependency.cpp \
-    entiredependencylist.cpp
+    entiredependencylist.cpp \
+    installorderqueue.cpp \
+    installorderqueuegenerator.cpp
 
 HEADERS += \
     dependency.h \
-    entiredependencylist.h
+    entiredependencylist.h \
+    installorderqueue.h \
+    installorderqueuegenerator.h
 
 DISTFILES += \
     main.cpp.DEPRECATED

@@ -1,3 +1,6 @@
+#ifndef ENTIREDEPENDENCYLIST_CPP
+#define ENTIREDEPENDENCYLIST_CPP
+
 #include "entiredependencylist.h"
 
 entireDependencyList::entireDependencyList()
@@ -97,3 +100,28 @@ int entireDependencyList::getUniqueIdByDependencyName(std::string dependencyName
   }
   return output;
 }
+
+int entireDependencyList::getHeadDependencyAt(int index)
+{
+  int output = -1;
+  int headDependencyUniqueId = -1;
+
+  int normalizedHeadDependencyListLength = this->normalizedArrayLength(headDependencyList->size());
+  if(index <= normalizedHeadDependencyListLength)//index out of range prevention
+  {
+    headDependencyUniqueId = headDependencyList->at(index);
+  }
+  output = headDependencyUniqueId;
+  return output;
+}
+
+int entireDependencyList::normalizedArrayLength(int length)
+{
+  int output = -1;
+  int normalizedLength = -1;
+  normalizedLength = (length-1 == 0) ? 1 : length-1;
+  output = normalizedLength;
+  return output;
+}
+
+#endif
