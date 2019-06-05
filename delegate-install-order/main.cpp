@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
     manifest->initialize();
     manifest->forEveryLineInManifest_thenAppendToArrayWithUniqueId(manifestLocation);
     manifest->assignPrerequisites(directoryOfPackageInformation);
-
+/*
     //Determine head dependencies using the "BuildEssentail_amd64" text file.
     manifest->determineAndFlagHeadDependencies(completeLocationToPackageHead);
 
@@ -27,12 +27,13 @@ int main(int argc, char *argv[])
     std::vector<installOrderQueue*>* installOrderQueues = new std::vector<installOrderQueue*>();
       //while loop through each head dependency,generating an install order with each depth at level zero from head to tail.
         //Generate one install order queue with each depth at level zero from head to tail.
-        generator->generateHeadInstallOrderQueue(0/*i*/);
+        generator->generateHeadInstallOrderQueue(0/*i*);
 
       //end while loop
 
     //Free
     delete manifest;
+    */
 
     return 0;
 }

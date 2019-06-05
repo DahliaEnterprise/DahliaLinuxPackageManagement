@@ -24,7 +24,7 @@ void installOrderQueueGenerator::generateHeadInstallOrderQueue(int index)
   while(keep_depthing == true)
   {
     //With current dependency, get its zero-level prerequisite' unique id
-    dependency* lastDependency = manifest->getDependencyByUniqueId(lastDependencyUniqueId);
+    //dependency* lastDependency = manifest->getDependencyByUniqueId(lastDependencyUniqueId);
     keep_depthing = false;
   }
 }

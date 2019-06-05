@@ -1,10 +1,10 @@
- gcc-6-base
- libatomic1
- libcilkrts5
- libgcc1
- libgomp1
- libitm1
- liblsan0
- libmpx2
- libquadmath0
- libtsan0
+gcc-6-base
+libatomic1
+libcilkrts5
+libgcc1
+libgomp1
+libitm1
+liblsan0
+libmpx2
+libquadmath0
+libtsan0

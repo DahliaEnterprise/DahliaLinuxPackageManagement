@@ -24,7 +24,7 @@ public:
 
 private:
   std::vector<std::pair<int,std::string>>* manifestList;
-  int nextAvailableManifestListDependencyId = 1;
+  int nextAvailableManifestListDependencyId;
   int getNextAvailableManifestListDependencyId();
 
   std::vector<dependency*>* dependencyList;

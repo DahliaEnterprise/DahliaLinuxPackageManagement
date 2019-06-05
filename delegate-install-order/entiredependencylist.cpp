@@ -15,6 +15,7 @@ entireDependencyList::~entireDependencyList()
 
 void entireDependencyList::initialize()
 {
+  nextAvailableManifestListDependencyId = 1;
   manifestList = new std::vector<std::pair<int,std::string>>();
   dependencyList = new std::vector<dependency*>();
   headDependencyList = new std::vector<int>();
@@ -90,12 +91,14 @@ int entireDependencyList::getUniqueIdByDependencyName(std::string dependencyName
 {
   int output = -1;
 
-  for(unsigned int a = 0; a < manifestList->size(); a++)
+  for(int a = 0; a < manifestList->size(); a++)
   {
     std::pair<int, std::string> dependencyMetadata = manifestList->at(a);
-    if(std::get<1>(dependencyMetadata).compare(dependencyName) == 0)
+    std::string suspectDependencyName = std::get<1>(dependencyMetadata);
+    if(suspectDependencyName.compare(dependencyName) == 0)
     {
       output = std::get<0>(dependencyMetadata);
+      a = manifestList->size();
     }
   }
   return output;
@@ -144,9 +147,37 @@ void entireDependencyList::assignPrerequisites(std::string directoryOfPackageInf
   int normalizedManifestLength = this->normalizedArrayLength(manifestList->size());
   for(int a = 0; a < normalizedManifestLength; a++)
   {
-    //Get dependency name
+    int dependencyId = std::get<0>(manifestList->at(a));
     std::string dependencyName = std::get<1>(manifestList->at(a));
-    std::cout << "DEP:" << dependencyName << "\n";
+
+    //Open dependency' text file containing its prerequisites
+    std::string nameAndLocationOfPrerequisiteList = std::string(directoryOfPackageInformation);
+    nameAndLocationOfPrerequisiteList.append(dependencyName);
+    nameAndLocationOfPrerequisiteList.append(".txt");
+
+    std::ifstream prerequisiteListTextFile; prerequisiteListTextFile.open(nameAndLocationOfPrerequisiteList, std::ifstream::in);
+    if(prerequisiteListTextFile.is_open() == true)
+    {
+      char prerequisiteName[100];
+      memset(prerequisiteName, '\0', 100);
+      prerequisiteListTextFile.getline(prerequisiteName, 100);
+      std::string prerequisiteNameAsString = std::string(prerequisiteName);
+      std::cout << prerequisiteNameAsString << " " << prerequisiteNameAsString.size() << "\n";
+      while(strlen(prerequisiteName) > 0)
+      {
+        //std::cout << prerequisiteName << "\n";
+        //Get the prequisites (manifestList) unique id and append it to the respective dependency object.
+        std::string prerequisiteNameAsString = std::string(prerequisiteName);
+        std::cout << "\n" << prerequisiteNameAsString << " " << prerequisiteNameAsString.size() << "\n";
+        int prerequisiteUniqueId = this->getUniqueIdByDependencyName(prerequisiteNameAsString);
+        //std::cout << prerequisiteUniqueId << " " << prerequisiteName << "\n";
+        //parentDependency->appendPrerequisite(prerequisiteUniqueId);
+
+        //Reset for next iteration of while loop
+        memset(prerequisiteName, '\0', 100);
+        prerequisiteListTextFile.getline(prerequisiteName, 100);
+      }
+    }
   }
 }
 

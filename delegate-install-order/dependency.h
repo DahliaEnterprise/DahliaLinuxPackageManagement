@@ -2,7 +2,7 @@
 #define DEPENDENCY_H
 
 #include <iostream>
-
+#include <vector>
 class dependency
 {
 public:
@@ -10,10 +10,12 @@ public:
   void setId(int idToSetAs);
   void setName(std::string nameToSetAs);
   std::string getName();
+  void appendPrerequisite(int prerequisiteUniqueId);
 
 private:
   int uniqueId;
   std::string name;
+  std::vector<int>* prerequisiteList;
 };
 
 #endif // DEPENDENCY_H

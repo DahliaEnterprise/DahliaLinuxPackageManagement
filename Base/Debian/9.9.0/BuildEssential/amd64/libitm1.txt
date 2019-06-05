@@ -1,2 +1,2 @@
- gcc-6-base
- libc6
+gcc-6-base
+libc6
