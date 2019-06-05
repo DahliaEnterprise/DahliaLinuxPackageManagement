@@ -27,6 +27,8 @@ private:
   std::vector<dependency*>* dependencyList;
   void createDependencyObject(int dependencyId, std::string dependencyName);
 
+  std::vector<int>* headDependencyList;
+
   int getUniqueIdByDependencyName(std::string dependencyName);
 };
 

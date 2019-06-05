@@ -14,6 +14,7 @@ void entireDependencyList::initialize()
 {
   manifestList = new std::vector<std::pair<int,std::string>>();
   dependencyList = new std::vector<dependency*>();
+  headDependencyList = new std::vector<int>();
 }
 
 
@@ -64,19 +65,20 @@ int entireDependencyList::getNextAvailableManifestListDependencyId()
 
 void entireDependencyList::determineAndFlagHeadDependencies(std::string fileLocation)
 {
-  std::ifstream manifestTextFile; manifestTextFile.open(fileLocation, std::ifstream::in);
-  if(manifestTextFile.is_open() == true)
+  std::ifstream headDependencyListTextFile; headDependencyListTextFile.open(fileLocation, std::ifstream::in);
+  if(headDependencyListTextFile.is_open() == true)
   {
     char dependencyName[100];
     memset(dependencyName, '\0', 100);
-    manifestTextFile.getline(dependencyName, 100);
+    headDependencyListTextFile.getline(dependencyName, 100);
     while(strlen(dependencyName) > 0)
     {
-      //
-      std::cout << this->getUniqueIdByDependencyName(std::string(dependencyName));
+      int uniqueId_ofDependencyNameInHead = this->getUniqueIdByDependencyName(std::string(dependencyName));
+      headDependencyList->push_back(uniqueId_ofDependencyNameInHead);
+
       //Reset for next iteration of while loop
       memset(dependencyName, '\0', 100);
-      manifestTextFile.getline(dependencyName, 100);
+      headDependencyListTextFile.getline(dependencyName, 100);
     }
   }
 }
