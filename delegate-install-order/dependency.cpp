@@ -17,3 +17,5 @@ void dependency::setName(std::string nameToSetAs)
     name.clear();
     name.append(nameToSetAs);
 }
+
+std::string dependency::getName(){ return name; }

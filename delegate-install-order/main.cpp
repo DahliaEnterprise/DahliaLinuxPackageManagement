@@ -14,6 +14,7 @@ int main(int argc, char *argv[])
     entireDependencyList* manifest = new entireDependencyList();
     manifest->initialize();
     manifest->forEveryLineInManifest_thenAppendToArrayWithUniqueId(manifestLocation);
+    manifest->assignPrerequisites(directoryOfPackageInformation);
 
     //Determine head dependencies using the "BuildEssentail_amd64" text file.
     manifest->determineAndFlagHeadDependencies(completeLocationToPackageHead);

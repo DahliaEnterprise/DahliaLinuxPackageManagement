@@ -28,7 +28,6 @@ libgmp10
 make
 gpp-6
 libgomp1
-manifest
 gpp
 libisl15
 multiarch-support

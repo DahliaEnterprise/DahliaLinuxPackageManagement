@@ -115,6 +115,21 @@ int entireDependencyList::getHeadDependencyAt(int index)
   return output;
 }
 
+dependency* entireDependencyList::getDependencyByUniqueId(int uniqueId)
+{
+  dependency* output = nullptr;
+  int normalizedDependencyLength = normalizedArrayLength(dependencyList->size());
+  for(int a = 0; a < normalizedDependencyLength; a++)
+  {
+    dependency* suspectDependency = dependencyList->at(a);
+    /** TODO: if(suspectDependency->getUniqueId() == uniqueId)
+    {
+      output = suspectDependency;
+    }**/
+  }
+  return output;
+}
+
 int entireDependencyList::normalizedArrayLength(int length)
 {
   int output = -1;
@@ -122,6 +137,17 @@ int entireDependencyList::normalizedArrayLength(int length)
   normalizedLength = (length-1 == 0) ? 1 : length-1;
   output = normalizedLength;
   return output;
+}
+
+void entireDependencyList::assignPrerequisites(std::string directoryOfPackageInformation)
+{
+  int normalizedManifestLength = this->normalizedArrayLength(manifestList->size());
+  for(int a = 0; a < normalizedManifestLength; a++)
+  {
+    //Get dependency name
+    std::string dependencyName = std::get<1>(manifestList->at(a));
+    std::cout << "DEP:" << dependencyName << "\n";
+  }
 }
 
 #endif

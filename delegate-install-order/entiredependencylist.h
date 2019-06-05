@@ -16,10 +16,11 @@ public:
   void initialize();
 
   void forEveryLineInManifest_thenAppendToArrayWithUniqueId(std::string fileLocation);
+  void assignPrerequisites(std::string directoryOfPackageInformation);
   void determineAndFlagHeadDependencies(std::string fileLocation);
 
   int getHeadDependencyAt(int index);
-
+  dependency* getDependencyByUniqueId(int uniqueId);
 
 private:
   std::vector<std::pair<int,std::string>>* manifestList;

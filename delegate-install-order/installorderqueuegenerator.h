@@ -1,6 +1,7 @@
 #ifndef INSTALLORDERQUEUEGENERATOR_H
 #define INSTALLORDERQUEUEGENERATOR_H
 
+#include "installorderqueue.cpp"
 #include "entiredependencylist.cpp"
 
 class installOrderQueueGenerator

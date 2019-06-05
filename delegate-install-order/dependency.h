@@ -6,13 +6,14 @@
 class dependency
 {
 public:
-    dependency();
-    void setId(int idToSetAs);
-    void setName(std::string nameToSetAs);
+  dependency();
+  void setId(int idToSetAs);
+  void setName(std::string nameToSetAs);
+  std::string getName();
 
 private:
-    int uniqueId;
-    std::string name;
+  int uniqueId;
+  std::string name;
 };
 
 #endif // DEPENDENCY_H
