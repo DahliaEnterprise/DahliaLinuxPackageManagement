@@ -106,7 +106,8 @@ installOrderQueue* installOrderQueueGenerator::generateNextQueue(installOrderQue
         {
           //If cannot go down a level remove tail, this dependency has been virtually installed.
           newQueue->removeDepthTail();
-          if(this->installedDependenciesContains(tail->getUniqueId()) == false){ installedDependencies->push_back(tail->getUniqueId()); }
+          if(this->installedDependenciesContains(uniqueIdOfNextProposedLevelAtTail) == false){ installedDependencies->push_back(uniqueIdOfNextProposedLevelAtTail); }
+          //make new tail go down a level
           keep_leveling = false;
         }
       }
@@ -146,60 +147,6 @@ installOrderQueue* installOrderQueueGenerator::generateNextQueue(installOrderQue
     }
 
   }
-  /*
-  //Get dependency of the tail
-  dependency* tailDependency = manifest->getDependencyByUniqueId(previousInstallOrderQueue->dependencyUniqueIdOfTail());
-
-  //Get level(prerequisite index) of tail depth from previous install order queue.
-  int levelOfTailFromPreviousInstallOrderQueue = previousInstallOrderQueue->getLevelAtTailDepth();
-
-  //Determine if the next proposed level(prerequisite index) exists.
-  int proposedNextLevel = levelOfTailFromPreviousInstallOrderQueue + 1;
-  bool nextLevelExists = false;
-  if(tailDependency->totalPrerequisites() > 0)
-  {
-    int zeroBasedTotalPrerequisites = (tailDependency->totalPrerequisites()-1 <= 0) ? 0 : tailDependency->totalPrerequisites()-1;
-    std::cout << proposedNextLevel << " <= " << zeroBasedTotalPrerequisites << " | " << tailDependency->totalPrerequisites() << "\n";
-    if(proposedNextLevel <= zeroBasedTotalPrerequisites)
-    {
-      nextLevelExists = true;
-    }
-  }
-  
-  //if next level exist, redefine level at that depth
-  if(nextLevelExists == true)
-  {
-    //redefine level at this (parent of tail)depth.
-    //get unique id for dependency of the next level.
-    int uniqueIdOfTheNextLevel = tailDependency->getPrerequisiteUniqueId(proposedNextLevel);
-    newQueue->redefineLevelOfTail(uniqueIdOfTheNextLevel, proposedNextLevel);
-    std::cout << "redefined level\n";
-
-    //check this levels dependency has prereqiqisites, if yes, continue down the deepest-depth as level zeros.
-    dependency* nextLevelPrerequisite = manifest->getDependencyByUniqueId(uniqueIdOfTheNextLevel);
-    if(nextLevelPrerequisite->hasPrerequisites() == true)
-    {
-      //Continue down proceeding depths (at zero level per depth).
-      bool keep_depthing = true;
-      while(keep_depthing == true)
-      {
-        int uniqueId = nextLevelPrerequisite->getPrerequisiteUniqueId(0);
-        nextLevelPrerequisite = manifest->getDependencyByUniqueId(uniqueId);
-        if(nextLevelPrerequisite->hasPrerequisites() == true)
-        {
-          newQueue->appendAsDepth(uniqueId, 0);
-        }else{
-          keep_depthing = false;
-        }
-      }
-    }
-  }else if(nextLevelExists == false)
-  {
-    //this is the end of this queue, since the last queue already processed the (prerequisites) of the tail, remove the tail.
-    newQueue->removeDepthTail();
-    //std::cout << "removed tail\n";
-  }
-  */
 
   return newQueue;
 }

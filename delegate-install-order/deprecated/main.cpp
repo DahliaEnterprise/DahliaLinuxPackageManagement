@@ -41,6 +41,18 @@ int main(int argc, char *argv[])
         std::cout << "\n second head queue \n";
         previousInstallOrderQueue->printInstallOrderQueue(manifest);
 
+        int a = 1;
+        while(a < 100)
+        {
+
+          int normalizedArrayLength = (installOrderQueues->size()-1 <= 0) ? 0 : installOrderQueues->size()-1;
+          installOrderQueue* nextQueue = generator->generateNextQueue(installOrderQueues->at(normalizedArrayLength));
+          installOrderQueues->push_back(nextQueue);
+          nextQueue->printInstallOrderQueue(manifest);
+          a++;
+        }
+
+        /** DEPRECATED
         installOrderQueue* nextQueue1 = generator->generateNextQueue(installOrderQueues->at(1));
         installOrderQueues->push_back(nextQueue1);
         std::cout << "\n third head queue \n";
@@ -60,7 +72,7 @@ int main(int argc, char *argv[])
         installOrderQueues->push_back(nextQueue4);
         std::cout << "\n six head queue \n";
         nextQueue4->printInstallOrderQueue(manifest);
-
+        **/
 
       //end while loop
 

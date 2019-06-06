@@ -54,7 +54,11 @@ void installOrderQueue::redefineLevelOfTail(int uniqueIdToSetAs, int levelToSetA
 
 void installOrderQueue::removeDepthTail()
 {
-  installOrder->pop_back();
+  //prevent head from being removed
+  if(installOrder->size() > 1){
+    //remove tail
+    installOrder->pop_back();
+  }
 }
 
 void installOrderQueue::printInstallOrderQueue(entireDependencyList* manifest)
