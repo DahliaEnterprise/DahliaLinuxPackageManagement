@@ -18,6 +18,7 @@ public:
   void appendPrerequisite(int prerequisiteUniqueId);
   bool hasPrerequisites();
   int getPrerequisiteUniqueId(int zeroBasedLevel);
+  int totalPrerequisites();
 
 private:
   int uniqueId;

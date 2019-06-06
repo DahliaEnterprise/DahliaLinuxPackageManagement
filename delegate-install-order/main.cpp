@@ -20,14 +20,47 @@ int main(int argc, char *argv[])
     manifest->determineAndFlagHeadDependencies(completeLocationToPackageHead);
 
     //Initialize Generator
+    std::vector<int>* virtuallyInstalledDependencies = new std::vector<int>();
     installOrderQueueGenerator* generator = new installOrderQueueGenerator();
+    generator->becomeAwareOfVirtuallyInstalledDependencies(virtuallyInstalledDependencies);
     generator->becomeAwareOfManifest(manifest);
 
     //Generate queues
+
     std::vector<installOrderQueue*>* installOrderQueues = new std::vector<installOrderQueue*>();
       //while loop through each head dependency,generating an install order with each depth at level zero from head to tail.
         //Generate one install order queue with each depth at level zero from head to tail.
-        generator->generateHeadInstallOrderQueue(0/*i*/);
+        installOrderQueue* firstInstallOrderQueue = generator->generateHeadInstallOrderQueue(0/*i*/);
+        installOrderQueues->push_back(firstInstallOrderQueue);
+        std::cout << "first/head queue\n";
+        firstInstallOrderQueue->printInstallOrderQueue(manifest);
+
+        //Generate queues past the head-to-tail queue until all levels on every depth have been traversed.
+        installOrderQueue* previousInstallOrderQueue = generator->generateNextQueue(installOrderQueues->at(0));
+        installOrderQueues->push_back(previousInstallOrderQueue);
+        std::cout << "\n second head queue \n";
+        previousInstallOrderQueue->printInstallOrderQueue(manifest);
+
+        installOrderQueue* nextQueue1 = generator->generateNextQueue(installOrderQueues->at(1));
+        installOrderQueues->push_back(nextQueue1);
+        std::cout << "\n third head queue \n";
+        nextQueue1->printInstallOrderQueue(manifest);
+
+        installOrderQueue* nextQueue2 = generator->generateNextQueue(installOrderQueues->at(2));
+        installOrderQueues->push_back(nextQueue2);
+        std::cout << "\n fourth head queue \n";
+        nextQueue2->printInstallOrderQueue(manifest);
+
+        installOrderQueue* nextQueue3 = generator->generateNextQueue(installOrderQueues->at(3));
+        installOrderQueues->push_back(nextQueue3);
+        std::cout << "\n five head queue \n";
+        nextQueue3->printInstallOrderQueue(manifest);
+
+        installOrderQueue* nextQueue4 = generator->generateNextQueue(installOrderQueues->at(4));
+        installOrderQueues->push_back(nextQueue4);
+        std::cout << "\n six head queue \n";
+        nextQueue4->printInstallOrderQueue(manifest);
+
 
       //end while loop
 

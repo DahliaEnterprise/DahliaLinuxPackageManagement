@@ -1,3 +1,6 @@
+#ifndef DEPENDENCY_CPP
+#define DEPENDENCY_CPP
+
 #include "dependency.h"
 
 dependency::dependency()
@@ -46,3 +49,11 @@ int dependency::getPrerequisiteUniqueId(int zeroBasedLevel)
   output = prerequisiteUniqueId;
   return output;
 }
+
+int dependency::totalPrerequisites()
+{
+  return prerequisiteList->size();
+}
+
+
+#endif

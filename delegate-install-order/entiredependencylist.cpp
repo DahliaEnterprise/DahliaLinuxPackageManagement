@@ -138,7 +138,7 @@ int entireDependencyList::normalizedArrayLength(int length)
 {
   int output = -1;
   int normalizedLength = -1;
-  normalizedLength = (length-1 == 0) ? 1 : length-1;
+  normalizedLength = (length-1 <= 0) ? 0 : length-1;
   output = normalizedLength;
   return output;
 }
