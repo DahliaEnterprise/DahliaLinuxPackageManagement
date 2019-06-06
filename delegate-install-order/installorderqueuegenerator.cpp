@@ -74,17 +74,17 @@ installOrderQueue* installOrderQueueGenerator::generateNextQueue(installOrderQue
   int currentLevelOfTailIsAt = previousInstallOrderQueue->getLevelAtTailDepth();
     //Get parent dependency of tail and get total prequisites
     dependency* parentOfTail = manifest->getDependencyByUniqueId( previousInstallOrderQueue->dependencyUniqueIdOfTail() );
-  int availableLevelsAtTail = parentOfTail->totalPrerequisites(); (availableLevelsAtTail-1 <= 0) ? 0 : availableLevelsAtTail-1;
+  int availableLevelsAtTail = parentOfTail->totalPrerequisites(); availableLevelsAtTail = (availableLevelsAtTail-1 <= 0) ? 0 : availableLevelsAtTail-1;
   int nextProposedLevelAtTail = currentLevelOfTailIsAt += 1;
   if(nextProposedLevelAtTail < availableLevelsAtTail)
   { //Can go to next proposed level at tail.
+    int uniqueIdOfNextProposedLevelAtTail = parentOfTail->getPrerequisiteUniqueId(nextProposedLevelAtTail);
     //Determine if this next level dependency has already been installed.
-    if(this->installedDependenciesContains(tail->getUniqueId()) == false)
+    if(this->installedDependenciesContains(uniqueIdOfNextProposedLevelAtTail) == false)
     {
-      int uniqueIdOfNextProposedLevelAtTail = parentOfTail->getPrerequisiteUniqueId(nextProposedLevelAtTail);
       newQueue->redefineLevelOfTail(uniqueIdOfNextProposedLevelAtTail, nextProposedLevelAtTail);
       tailRedefined = true;
-    }else if(this->installedDependenciesContains(tail->getUniqueId()) == true)
+    }else if(this->installedDependenciesContains(uniqueIdOfNextProposedLevelAtTail) == true)
     {
       //Keeping going down until last level reached or a dependency hasen't been virtually installed.
       bool keep_leveling = true;
@@ -133,7 +133,6 @@ installOrderQueue* installOrderQueueGenerator::generateNextQueue(installOrderQue
           {
             installedDependencies->push_back(tailsZeroLevelPrerequisiteUniqueId);
             newQueue->appendAsDepth(tailsZeroLevelPrerequisiteUniqueId, 0);
-             std::cout << tailsZeroLevelPrerequisiteUniqueId << "\n";
           }else if(this->installedDependenciesContains(tailsZeroLevelPrerequisiteUniqueId) == true)
           {
             //Dependency virtually installed, this is the tail, no more depths to traverse.
