@@ -67,6 +67,7 @@ installOrderQueue* installOrderQueueGenerator::generateNextQueue(installOrderQue
   for(int a = 0; a <= normalizedArrayLength; a++){ std::pair<int, int> metadata = previousInstallOrderQueueMetadata->at(a); newQueue->appendAsDepth(std::get<0>(metadata), std::get<1>(metadata)); }
 
   // // Begin Generation // //
+  bool tailRedefined = false;
   //Get dependency of the tail of the install order queue.
   dependency* tail = manifest->getDependencyByUniqueId( previousInstallOrderQueue->dependencyUniqueIdOfTail() );
   //Determine if the tail can go down a level.
@@ -82,10 +83,33 @@ installOrderQueue* installOrderQueueGenerator::generateNextQueue(installOrderQue
     {
       int uniqueIdOfNextProposedLevelAtTail = parentOfTail->getPrerequisiteUniqueId(nextProposedLevelAtTail);
       newQueue->redefineLevelOfTail(uniqueIdOfNextProposedLevelAtTail, nextProposedLevelAtTail);
+      tailRedefined = true;
     }else if(this->installedDependenciesContains(tail->getUniqueId()) == true)
     {
       //Keeping going down until last level reached or a dependency hasen't been virtually installed.
-
+      bool keep_leveling = true;
+      while(keep_leveling == true)
+      {
+        std::cout << nextProposedLevelAtTail << " " << availableLevelsAtTail << "\n";
+        nextProposedLevelAtTail += 1;
+        if(nextProposedLevelAtTail < availableLevelsAtTail)
+        { //Can go to next proposed level at tail.
+          //Determine if this next level dependency has already been installed.
+          int uniqueIdOfNextProposedLevelAtTail = parentOfTail->getPrerequisiteUniqueId(nextProposedLevelAtTail);
+          if(this->installedDependenciesContains(uniqueIdOfNextProposedLevelAtTail) == false)
+          {
+            newQueue->redefineLevelOfTail(uniqueIdOfNextProposedLevelAtTail, nextProposedLevelAtTail);
+            tailRedefined = true;
+            keep_leveling = false;
+          }
+        }else if(nextProposedLevelAtTail >= availableLevelsAtTail)
+        {
+          //If cannot go down a level remove tail, this dependency has been virtually installed.
+          newQueue->removeDepthTail();
+          if(this->installedDependenciesContains(tail->getUniqueId()) == false){ installedDependencies->push_back(tail->getUniqueId()); }
+          keep_leveling = false;
+        }
+      }
     }
   }else if(nextProposedLevelAtTail >= availableLevelsAtTail)
   {
@@ -94,7 +118,35 @@ installOrderQueue* installOrderQueueGenerator::generateNextQueue(installOrderQue
     if(this->installedDependenciesContains(tail->getUniqueId()) == false){ installedDependencies->push_back(tail->getUniqueId()); }
   }
 
+  if(tailRedefined == true)
+  {
+    //Continue depthing (over zero levels) until (the new) tail or an already virtually installed dependency has been found.
+    bool keep_depthing = true;
+    while(keep_depthing == true)
+    {
+       tail = manifest->getDependencyByUniqueId( newQueue->dependencyUniqueIdOfTail() );
+       if(tail->totalPrerequisites() > 0)
+       {
+          int tailsZeroLevelPrerequisiteUniqueId = tail->getPrerequisiteUniqueId(0);
+          //Determine if this dependency has been virtually installed.
+          if(this->installedDependenciesContains(tailsZeroLevelPrerequisiteUniqueId) == false)
+          {
+            installedDependencies->push_back(tailsZeroLevelPrerequisiteUniqueId);
+            newQueue->appendAsDepth(tailsZeroLevelPrerequisiteUniqueId, 0);
+             std::cout << tailsZeroLevelPrerequisiteUniqueId << "\n";
+          }else if(this->installedDependenciesContains(tailsZeroLevelPrerequisiteUniqueId) == true)
+          {
+            //Dependency virtually installed, this is the tail, no more depths to traverse.
+            keep_depthing = false;
+          }
+       }else if(tail->totalPrerequisites() == 0)
+       {
+          //Tail has no prerequisites, no depth to traverse
+          keep_depthing = false;
+       }
+    }
 
+  }
   /*
   //Get dependency of the tail
   dependency* tailDependency = manifest->getDependencyByUniqueId(previousInstallOrderQueue->dependencyUniqueIdOfTail());
@@ -154,7 +206,7 @@ installOrderQueue* installOrderQueueGenerator::generateNextQueue(installOrderQue
 }
 
 
-bool installOrderQueue::installedDependenciesContains(int uniqueId)
+bool installOrderQueueGenerator::installedDependenciesContains(int uniqueId)
 {
   bool output = false;
   int normalizedLengthArray = (installedDependencies->size()-1 <= 0) ? 0 : installedDependencies->size()-1;

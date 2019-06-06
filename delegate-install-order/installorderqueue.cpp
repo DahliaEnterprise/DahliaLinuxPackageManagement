@@ -60,7 +60,7 @@ void installOrderQueue::removeDepthTail()
 void installOrderQueue::printInstallOrderQueue(entireDependencyList* manifest)
 {
   int normalizedArrayLength = (installOrder->size()-1 <= 0 ? 0 : installOrder->size()-1);
-  for(int a = 0; a <= normalizedArrayLength; a++)
+  for(int a = 0; a < normalizedArrayLength; a++)
   {
 
     dependency* dep = manifest->getDependencyByUniqueId(std::get<0>(installOrder->at(a)));
