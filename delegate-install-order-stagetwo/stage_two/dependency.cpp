@@ -15,18 +15,33 @@ void dependency::initialize(int setUniqueId, std::string setDependencyName)
   prerequisiteIds = new std::vector<int>();
 }
 
-int dependency::getId(){ return uniqueId; }
+int dependency::getId()
+{
+  return uniqueId;
+}
 std::string dependency::getName()
 {
   return name;
 }
 
-void dependency::appendPrerequisite(int prerequisiteId){ prerequisiteIds->push_back(prerequisiteId); }
+void dependency::appendPrerequisite(int prerequisiteId)
+{
+  prerequisiteIds->push_back(prerequisiteId);
+}
 
-int dependency::totalPrerequisites(){ return prerequisiteIds->size(); }
-bool dependency::hasPrerequisites(){ bool output = false; if(prerequisiteIds->size() > 0){ output = true; } return output; }
+int dependency::totalPrerequisites()
+{
+  return prerequisiteIds->size();
+}
+bool dependency::hasPrerequisites()
+{
+  return (prerequisiteIds->size() > 0 ? true : false);
+}
 
-int dependency::getPrerequisiteIdByPrerquisiteListLevel(int index){ return prerequisiteIds->at(index); }
+int dependency::getPrerequisiteIdByPrerquisiteListLevel(int index)
+{
+  return prerequisiteIds->at(index);
+}
 
 void dependency::printPrerequisites()
 {

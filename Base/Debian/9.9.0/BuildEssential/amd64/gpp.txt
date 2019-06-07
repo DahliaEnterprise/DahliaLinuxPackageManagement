@@ -1,4 +1,4 @@
 cpp
-g++-6
+gpp-6
 gcc
 gcc-6

@@ -46,3 +46,7 @@ tar
 libc6-dev
 libmpfr4
 zlib1g
+xz-utils
+liblzma5
+gcc-6
+patch

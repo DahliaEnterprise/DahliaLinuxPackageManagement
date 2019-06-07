@@ -1,9 +1,13 @@
-gcc-6
+binutils
+cpp-6
 gcc-6-base
 libc6
+libcc1-0
+libgcc-6-dev
+libgcc1
 libgmp10
 libisl15
 libmpc3
 libmpfr4
-libstdcpp-6-dev
+libstdcpp6
 zlib1g

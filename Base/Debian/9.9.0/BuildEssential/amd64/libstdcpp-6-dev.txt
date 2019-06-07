@@ -1,4 +1,4 @@
 gcc-6-base
 libc6-dev
 libgcc-6-dev
-libstdc++6
+libstdcpp6

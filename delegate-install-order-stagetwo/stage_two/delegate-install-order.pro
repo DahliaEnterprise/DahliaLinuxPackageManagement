@@ -7,10 +7,12 @@ SOURCES += main.cpp \
     manifestlist.cpp \
     dependency.cpp \
     installorderqueue.cpp \
-    installorderqueuegenerator.cpp
+    installorderqueuegenerator.cpp \
+    textfile.cpp
 
 HEADERS += \
     manifestlist.h \
     dependency.h \
     installorderqueue.h \
-    installorderqueuegenerator.h
+    installorderqueuegenerator.h \
+    textfile.h
