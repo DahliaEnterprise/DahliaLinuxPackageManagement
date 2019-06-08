@@ -22,9 +22,8 @@ int main(int argc, char *argv[])
   std::vector<installOrder*>* installorderqueue_history = new std::vector<installOrder*>();
   installorderqueue_history->push_back(headQueue);
 
-  int loopLimit = 10;
-  int a = 0;
-  while(a < loopLimit)
+  bool keep_generating = true;
+  while(keep_generating == true)
   {
     installOrder* currentQueue = installorderqueue_history->at(installorderqueue_history->size()-1);
 
@@ -60,28 +59,23 @@ int main(int argc, char *argv[])
         currentQueue->removeTail();
       }
     }
-    printQueue(currentQueue->printOrder(), manifest);
 
-    //Commit current queue by appending a copy for the next while loop around
-    installOrder* newQueue = new installOrder(); newQueue->initalize();
-    for(int b = 0; b < currentQueue->totalDepths(); b++)
+    if(currentQueue->totalDepths() > 0)
     {
-      std::pair<int, int> idAndLevel = currentQueue->idAndLevelAtDepth(b);
-      newQueue->appendId(std::get<0>(idAndLevel), std::get<1>(idAndLevel));
-    }
-    installorderqueue_history->push_back(newQueue);
+      printQueue(currentQueue->printOrder(), manifest);
 
-
-    // print status //
-    std::vector<int> queue = currentQueue->printOrder();
-    for(size_t b = 0; b < queue.size(); b++)
+      //Commit current queue by appending a copy for the next while loop around
+      installOrder* newQueue = new installOrder(); newQueue->initalize();
+      for(int b = 0; b < currentQueue->totalDepths(); b++)
+      {
+        std::pair<int, int> idAndLevel = currentQueue->idAndLevelAtDepth(b);
+        newQueue->appendId(std::get<0>(idAndLevel), std::get<1>(idAndLevel));
+      }
+      installorderqueue_history->push_back(newQueue);
+    }else if(currentQueue->totalDepths() == 0)
     {
-      //std::cout << manifest->getDependencyById(queue.at(b))->getName() << " => ";
+      keep_generating = false;
     }
-    //std::cout << "\n";
-
-    //temp loop limit
-    a++;
   }
 
 
