@@ -12,7 +12,7 @@ manifestList::manifestList()
 void manifestList::initialize(std::string setDirectoryOfDependencies, std::string setPackageHeadTextFilename)
 {
   nextAvailableUniqueId = 1;
-  directoryOfDependencies.append(setDirectoryOfDependencies); packageHeadTextFilename.append(setPackageHeadTextFilename); dependencies = new std::vector<dependency*>();
+  directoryOfDependencies.append(setDirectoryOfDependencies); packageHeadTextFilename.append(setPackageHeadTextFilename); dependencies = new std::vector<dependency*>(); headDependencyIds = new std::vector<int>();
 }
 
 
@@ -61,6 +61,28 @@ void manifestList::steptwo_linkPrerequisitesToTheirRespectiveDependencies()
     }
     delete text;
   }
+}
+
+void manifestList::stepthree_determineHeadDependencies()
+{
+  textFile* text = new textFile();
+  std::string directoryAndFilename = std::string();
+  directoryAndFilename.append(directoryOfDependencies);
+  directoryAndFilename.append("BuildEssential_amd64.txt");
+  text->openTextFile(directoryAndFilename);
+  bool keep_looping = true;
+  while(keep_looping == true)
+  {
+    std::pair<std::string, bool> nextLinePair = text->getNextLine(); (void)(std::get<1>(nextLinePair) == true ? keep_looping = false : false); std::string nextLine = std::get<0>(nextLinePair);
+    dependency* nextHeadDependency = this->getDependencyObjectByName(nextLine);
+    headDependencyIds->push_back(nextHeadDependency->getId());
+  }
+  delete text;
+}
+
+void manifestList::generateQueueToDeepestDepth()
+{
+
 }
 
 dependency* manifestList::getDependencyObjectByName(std::string dependencyName)

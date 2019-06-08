@@ -12,7 +12,7 @@ manifestList::manifestList()
 void manifestList::initialize(std::string setDirectoryOfDependencies, std::string setPackageHeadTextFilename)
 {
   nextAvailableUniqueId = 1;
-  directoryOfDependencies.append(setDirectoryOfDependencies); packageHeadTextFilename.append(setPackageHeadTextFilename); dependencies = new std::vector<dependency*>();
+  directoryOfDependencies.append(setDirectoryOfDependencies); packageHeadTextFilename.append(setPackageHeadTextFilename); dependencies = new std::vector<dependency*>(); headDependencyIds = new std::vector<int>(); previouslyVirtuallyInstalled = new std::vector<int>();
 }
 
 
@@ -62,6 +62,44 @@ void manifestList::steptwo_linkPrerequisitesToTheirRespectiveDependencies()
     delete text;
   }
 }
+
+void manifestList::stepthree_determineHeadDependencies()
+{
+  textFile* text = new textFile();
+  std::string directoryAndFilename = std::string();
+  directoryAndFilename.append(directoryOfDependencies);
+  directoryAndFilename.append("BuildEssential_amd64.txt");
+  text->openTextFile(directoryAndFilename);
+  bool keep_looping = true;
+  while(keep_looping == true)
+  {
+    std::pair<std::string, bool> nextLinePair = text->getNextLine(); (void)(std::get<1>(nextLinePair) == true ? keep_looping = false : false); std::string nextLine = std::get<0>(nextLinePair);
+    dependency* nextHeadDependency = this->getDependencyObjectByName(nextLine);
+    headDependencyIds->push_back(nextHeadDependency->getId());
+  }
+  delete text;
+}
+
+dependency* manifestList::getDependencyByHeadIndex(int index)
+{
+  return this->getDependencyById(headDependencyIds->at(index));
+}
+
+dependency* manifestList::getDependencyById(int uniqueId)
+{
+  dependency* output = nullptr;
+  for(size_t a = 0; a < dependencies->size(); a++)
+  {
+    dependency* suspectDependency = dependencies->at(a);
+    if(suspectDependency->getId() == uniqueId)
+    {
+      output = suspectDependency;
+      a = dependencies->size();
+    }
+  }
+  return output;
+}
+
 
 dependency* manifestList::getDependencyObjectByName(std::string dependencyName)
 {
@@ -122,6 +160,25 @@ bool manifestList::stringMatches(std::string string1, std::string string2, size_
   free(string1Char); free(string2Char);
   output = matches;
   return output;
+}
+
+bool manifestList::previouslyInstalled(int uniqueId)
+{
+  bool output = false;
+  for(size_t a = 0; a < previouslyVirtuallyInstalled->size(); a++)
+  {
+    if(previouslyVirtuallyInstalled->at(a) == uniqueId)
+    {
+      output = true;
+      a = previouslyVirtuallyInstalled->size();
+    }
+  }
+  return output;
+}
+
+void manifestList::appendVirtuallyInstalled(int uniqueId)
+{
+  previouslyVirtuallyInstalled->push_back(uniqueId);
 }
 
 #endif
