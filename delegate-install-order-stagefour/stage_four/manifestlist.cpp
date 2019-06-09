@@ -41,6 +41,7 @@ void manifestList::steptwo_linkPrerequisitesToTheirRespectiveDependencies()
   for(size_t a = 0; a < dependencies->size(); a++)
   {
     dependency* dep = dependencies->at(a);
+    //std::cout << "Dependency " << dep->getName() << "\n";
     textFile* text = new textFile();
     std::string directoryAndFilename = std::string();
     directoryAndFilename.append(directoryOfDependencies);
@@ -53,11 +54,15 @@ void manifestList::steptwo_linkPrerequisitesToTheirRespectiveDependencies()
       std::pair<std::string, bool> nextLinePair = text->getNextLine();
       (void)(std::get<1>(nextLinePair) == true ? keep_looping = false : false);
       std::string nextLine = std::get<0>(nextLinePair);
-      dependency* nextPrerequisite = this->getDependencyObjectByName(nextLine);
-      if(nextPrerequisite != nullptr)
+      if(nextLine.size() > 0)//Has another prerequisite?
       {
-        dep->appendPrerequisite(nextPrerequisite->getId());
-      }else if(nextPrerequisite == nullptr){ std::cout << "prerequisite " << nextLine << " not found during search(by name) as required by " << dep->getName() << "\n"; }
+        dependency* nextPrerequisite = this->getDependencyObjectByName(nextLine);
+        if(nextPrerequisite != nullptr)
+        {
+          //std::cout << "              " << nextPrerequisite->getName() << "\n";
+          dep->appendPrerequisite(nextPrerequisite->getId());
+        }else if(nextPrerequisite == nullptr){ std::cout << "prerequisite " << nextLine << " not found during search(by name) as required by " << dep->getName() << "\n"; }
+      }
     }
     delete text;
   }

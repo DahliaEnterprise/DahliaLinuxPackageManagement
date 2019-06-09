@@ -48,30 +48,38 @@ int main(int argc, char *argv[])
             //Is it on the current queue?
             if(currentQueue->isIdOnQueue(tailPrerequisiteId) == false)
             {
-              tailHasDeeperDepth = true; b = tailTotalPrerquisites;
-            }
-          }
+              tailHasDeeperDepth = true; index = b; b = tailTotalPrerquisites;
+            }else{ /* std::cout << "already on queue " << manifest->getDependencyById(manifest->getDependencyById(currentQueue->tailId())->getPrerequisiteIdByPrerquisiteListLevel(b))->getName() << "\n";*/ }
+          }else{ /* std::cout << "previously installed " << manifest->getDependencyById(manifest->getDependencyById(currentQueue->tailId())->getPrerequisiteIdByPrerquisiteListLevel(b))->getName() << "\n";*/ }
         }
 
         if(tailHasDeeperDepth == true)
         {
-          currentQueue->appendId(tailPrerequisiteId  ,index);
+          currentQueue->appendId(tailPrerequisiteId, index);
           //printQueue(currentQueue->printOrder(), manifest);
 
         }else{
           //Deepest tail for this queue.
           std::cout << "recommend install :" << manifest->getDependencyById(currentQueue->tailId())->getName() << "\n";
+          //printQueue(currentQueue->printOrder(), manifest);
+          manifest->getDependencyById(currentQueue->tailId())->printPrerequisites();
           determinedInstallOrder->push_back(currentQueue->tailId());
           manifest->appendVirtuallyInstalled(currentQueue->tailId());
-          currentQueue->removeTail();
           //printQueue(currentQueue->printOrder(), manifest);
+          currentQueue->removeTail();
+
 
         }
+      }else{
+        //currentQueue->removeTail();
+        std::cout << "tail installed... " << manifest->getDependencyById(currentQueue->tailId())->getName() << "\n";
       }
+
+
 
       if(currentQueue->totalDepths() > 0)
       {
-        //printQueue(currentQueue->printOrder(), manifest);
+        printQueue(currentQueue->printOrder(), manifest);
 
         //Commit current queue by appending a copy for the next while loop around
         installOrder* newQueue = new installOrder(); newQueue->initalize();
