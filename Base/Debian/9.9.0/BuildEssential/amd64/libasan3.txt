@@ -1,0 +1,4 @@
+gcc-6-base
+libc6
+libgcc1
+libstdcpp6

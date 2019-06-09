@@ -181,4 +181,9 @@ void manifestList::appendVirtuallyInstalled(int uniqueId)
   previouslyVirtuallyInstalled->push_back(uniqueId);
 }
 
+int manifestList::totalHeads()
+{
+  return headDependencyIds->size();
+}
+
 #endif

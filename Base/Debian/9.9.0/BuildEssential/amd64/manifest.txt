@@ -50,3 +50,5 @@ xz-utils
 liblzma5
 gcc-6
 patch
+libasan3
+libubsan0

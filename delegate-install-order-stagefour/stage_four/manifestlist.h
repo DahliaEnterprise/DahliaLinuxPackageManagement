@@ -26,6 +26,8 @@ public:
   bool previouslyInstalled(int uniqueId);
   void appendVirtuallyInstalled(int uniqueId);
 
+  int totalHeads();
+
 private:
   std::string directoryOfDependencies;
   std::string packageHeadTextFilename;

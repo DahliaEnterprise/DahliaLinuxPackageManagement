@@ -14,89 +14,83 @@ int main(int argc, char *argv[])
   manifest->stepthree_determineHeadDependencies();
 
   /** Begin Generation **/
-  //Create initial deepest depth all zero level prerequisites.
-  installOrder* headQueue = new installOrder(); headQueue->initalize();
-  headQueue->appendId(manifest->getDependencyByHeadIndex(0)->getId(), 0);
+  //Loop every head
+  //for(int a = 0; a < manifest->totalHeads(); a++)
+  //{
+    //Create initial deepest depth all zero level prerequisites.
+    installOrder* headQueue = new installOrder(); headQueue->initalize();
+    headQueue->appendId(manifest->getDependencyByHeadIndex(1)->getId(), 0);
 
-  //BEGIN WHILE LOOP HERE
-  std::vector<installOrder*>* installorderqueue_history = new std::vector<installOrder*>();
-  installorderqueue_history->push_back(headQueue);
+    //BEGIN WHILE LOOP HERE
+    std::vector<int>* determinedInstallOrder = new std::vector<int>();
+    std::vector<installOrder*>* installorderqueue_history = new std::vector<installOrder*>();
+    installorderqueue_history->push_back(headQueue);
 
-  bool keep_generating = true;
-  while(keep_generating == true)
-  {
-    installOrder* currentQueue = installorderqueue_history->at(installorderqueue_history->size()-1);
-
-    //Has tail been installed?
-    if(manifest->previouslyInstalled(currentQueue->tailId()) == false)
+    bool keep_generating = true;
+    while(keep_generating == true)
     {
-      //Does tail have a prerequisite it can go to a deeper depth to?
-      int tailTotalPrerquisites = manifest->getDependencyById(currentQueue->tailId())->totalPrerequisites();
-      bool tailHasDeeperDepth = false;
-      int tailPrerequisiteId = -1;
-      int index = -1;
-      for(int b = 0; b < tailTotalPrerquisites; b++)
+      installOrder* currentQueue = installorderqueue_history->at(installorderqueue_history->size()-1);
+
+      //Has tail been installed?
+      if(manifest->previouslyInstalled(currentQueue->tailId()) == false)
       {
-        tailPrerequisiteId = manifest->getDependencyById(currentQueue->tailId())->getPrerequisiteIdByPrerquisiteListLevel(b);
-        //Has this been installed?
-        if(manifest->previouslyInstalled(tailPrerequisiteId) == false)
+        //Does tail have a prerequisite it can go to a deeper depth to?
+        int tailTotalPrerquisites = manifest->getDependencyById(currentQueue->tailId())->totalPrerequisites();
+        bool tailHasDeeperDepth = false;
+        int tailPrerequisiteId = -1;
+        int index = -1;
+        for(int b = 0; b < tailTotalPrerquisites; b++)
         {
-          //Is it on the current queue?
-          if(currentQueue->isIdOnQueue(tailPrerequisiteId) == false)
+          tailPrerequisiteId = manifest->getDependencyById(currentQueue->tailId())->getPrerequisiteIdByPrerquisiteListLevel(b);
+          //Has this been installed?
+          if(manifest->previouslyInstalled(tailPrerequisiteId) == false)
           {
-            tailHasDeeperDepth = true; b = tailTotalPrerquisites;
+            //Is it on the current queue?
+            if(currentQueue->isIdOnQueue(tailPrerequisiteId) == false)
+            {
+              tailHasDeeperDepth = true; b = tailTotalPrerquisites;
+            }
           }
+        }
+
+        if(tailHasDeeperDepth == true)
+        {
+          currentQueue->appendId(tailPrerequisiteId  ,index);
+          //printQueue(currentQueue->printOrder(), manifest);
+
+        }else{
+          //Deepest tail for this queue.
+          std::cout << "recommend install :" << manifest->getDependencyById(currentQueue->tailId())->getName() << "\n";
+          determinedInstallOrder->push_back(currentQueue->tailId());
+          manifest->appendVirtuallyInstalled(currentQueue->tailId());
+          currentQueue->removeTail();
+          //printQueue(currentQueue->printOrder(), manifest);
+
         }
       }
 
-      if(tailHasDeeperDepth == true)
+      if(currentQueue->totalDepths() > 0)
       {
-        currentQueue->appendId(tailPrerequisiteId  ,index);
-      }else{
-        //Deepest tail for this queue.
-        std::cout << "recommend install :" << manifest->getDependencyById(currentQueue->tailId())->getName() << "\n";
-        manifest->appendVirtuallyInstalled(currentQueue->tailId());
-        currentQueue->removeTail();
+        //printQueue(currentQueue->printOrder(), manifest);
+
+        //Commit current queue by appending a copy for the next while loop around
+        installOrder* newQueue = new installOrder(); newQueue->initalize();
+        for(int b = 0; b < currentQueue->totalDepths(); b++)
+        {
+          std::pair<int, int> idAndLevel = currentQueue->idAndLevelAtDepth(b);
+          newQueue->appendId(std::get<0>(idAndLevel), std::get<1>(idAndLevel));
+        }
+        installorderqueue_history->push_back(newQueue);
+      }else if(currentQueue->totalDepths() == 0)
+      {
+        keep_generating = false;
+        std::cout << "stop generating\n";
       }
     }
 
-    if(currentQueue->totalDepths() > 0)
-    {
-      printQueue(currentQueue->printOrder(), manifest);
 
-      //Commit current queue by appending a copy for the next while loop around
-      installOrder* newQueue = new installOrder(); newQueue->initalize();
-      for(int b = 0; b < currentQueue->totalDepths(); b++)
-      {
-        std::pair<int, int> idAndLevel = currentQueue->idAndLevelAtDepth(b);
-        newQueue->appendId(std::get<0>(idAndLevel), std::get<1>(idAndLevel));
-      }
-      installorderqueue_history->push_back(newQueue);
-    }else if(currentQueue->totalDepths() == 0)
-    {
-      keep_generating = false;
-    }
-  }
-
-
-  /** Print Queues **/
-  for(size_t a = 0; a < installorderqueue_history->size(); a++)
-  {
-    installOrder* orderToPrint = installorderqueue_history->at(a);
-    std::vector<int> queue = orderToPrint->printOrder();
-    for(size_t b = 0; b < queue.size(); b++)
-    {
-      //std::cout << manifest->getDependencyById(queue.at(b))->getName() << " => ";
-    }
-    //std::cout << "\n";
-  }
-
-  //Can the tail go down a level of prerequisites
-
-
+  //}
   //END WHILE LOOP HERE
-
-    //Can the parent of the tail go down a level?
 
   return 0;
 }

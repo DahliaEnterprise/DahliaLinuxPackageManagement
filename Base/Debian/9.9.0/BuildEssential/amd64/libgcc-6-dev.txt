@@ -8,3 +8,5 @@ liblsan0
 libmpx2
 libquadmath0
 libtsan0
+libasan3
+libubsan0
