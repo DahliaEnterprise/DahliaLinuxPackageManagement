@@ -38,9 +38,6 @@ private:
   std::vector<int>* headDependencyIds;
 
   std::vector<int>* previouslyVirtuallyInstalled;
-
-  bool stringMatches(std::string string1, std::string string2, size_t finiteLimit);
-
 };
 
 #endif // MANIFESTLIST_H

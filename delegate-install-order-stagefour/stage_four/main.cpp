@@ -14,58 +14,84 @@ int main(int argc, char *argv[])
   manifest->stepthree_determineHeadDependencies();
 
   /** Begin Generation **/
-  //Loop every head
-  //for(int a = 0; a < manifest->totalHeads(); a++)
-  //{
-    //Create initial deepest depth all zero level prerequisites.
-    installOrder* headQueue = new installOrder(); headQueue->initalize();
-    headQueue->appendId(manifest->getDependencyByHeadIndex(1)->getId(), 0);
+  installOrder* headQueue = new installOrder();
+  headQueue->initalize();
+  headQueue->appendId(manifest->getDependencyByHeadIndex(0)->getId(), 0);
 
-    //BEGIN WHILE LOOP HERE
-    std::vector<int>* determinedInstallOrder = new std::vector<int>();
-    std::vector<installOrder*>* installorderqueue_history = new std::vector<installOrder*>();
-    installorderqueue_history->push_back(headQueue);
-
-    bool keep_generating = true;
-    while(keep_generating == true)
+  bool keep_generating = true;
+  while(keep_generating == true)
+  {
+    //Went deeper? (if goes deeper we want to loop while back around to going deeper until stops)
+    bool wentDeeper = false;
+    dependency* tail = manifest->getDependencyById(headQueue->tailId());
+    if(tail->hasPrerequisites() == true)
     {
-      installOrder* currentQueue = installorderqueue_history->at(installorderqueue_history->size()-1);
-      std::cout << manifest->getDependencyById(currentQueue->tailId())->getName() << "\n";
-      //Can go deeper depth?
-      if(manifest->getDependencyById(currentQueue->tailId())->hasPrerequisites() == true)
+      int totalPrerequisites = tail->totalPrerequisites();
+      for(int a = 0; a < totalPrerequisites; a++)
       {
-        int totalDependencies = manifest->getDependencyById(currentQueue->tailId())->totalPrerequisites();
-        for(int a = 0; a < totalDependencies; a++)
+        int prerequisiteId = tail->getPrerequisiteIdByPrerquisiteListLevel(a);
+        if(manifest->previouslyInstalled(prerequisiteId) == false)
         {
-          std::cout << "prerquisite:" << manifest->getDependencyById(manifest->getDependencyById(currentQueue->tailId())->getPrerequisiteIdByPrerquisiteListLevel(a))->getName() << "\n";
+          if(headQueue->isIdOnQueue(prerequisiteId) == false)
+          {
+            wentDeeper = true;
+            headQueue->appendId(prerequisiteId, a);
+            a = totalPrerequisites;//stop for(a) loop
+          }
         }
-      }
-
-      keep_generating = false;
-
-      //If total depths is one ore more append new queue to history, else stop generating, head reached.
-      if(currentQueue->totalDepths() > 0)
-      {
-        printQueue(currentQueue->printOrder(), manifest);
-
-        //Commit current queue by appending a copy for the next while loop around
-        installOrder* newQueue = new installOrder(); newQueue->initalize();
-        for(int b = 0; b < currentQueue->totalDepths(); b++)
-        {
-          std::pair<int, int> idAndLevel = currentQueue->idAndLevelAtDepth(b);
-          newQueue->appendId(std::get<0>(idAndLevel), std::get<1>(idAndLevel));
-        }
-        installorderqueue_history->push_back(newQueue);
-      }else if(currentQueue->totalDepths() == 0)
-      {
-        keep_generating = false;
-        std::cout << "stop generating\n";
       }
     }
 
+    if(wentDeeper == false)
+    {
+      //Max depth found
+      printQueue(headQueue->printOrder(), manifest);
+      //std::cout << "no more deepness\n";
 
-  //}
-  //END WHILE LOOP HERE
+      std::cout << "installing " << manifest->getDependencyById(headQueue->tailId())->getName() << "\n";
+      manifest->appendVirtuallyInstalled(headQueue->tailId());
+      headQueue->removeTail();
+    }
+  }
+
+  //Generate to all level zeros deep
+  bool keep_depthing = true;
+  while(keep_depthing == true)
+  {
+    if(manifest->getDependencyById(headQueue->tailId())->hasPrerequisites() == true)
+    {
+      int prerquisiteId = manifest->getDependencyById(headQueue->tailId())->getPrerequisiteIdByPrerquisiteListLevel(0);
+      if(manifest->previouslyInstalled(prerquisiteId) == false)
+      {
+        if(headQueue->isIdOnQueue(prerquisiteId) == false)
+        {
+          headQueue->appendId(prerquisiteId, 0);
+        }else{ keep_depthing = false; }
+      }else{ keep_depthing = false; }
+    }else{ keep_depthing = false; }
+  }
+
+  //Consume
+  bool keep_consuming = true;
+  while(keep_consuming == true)
+  {
+    //Consume tail
+    std::cout << " install " << manifest->getDependencyById(headQueue->tailId())->getName() << "\n";
+    int tailLevel = headQueue->tailLevel();
+    headQueue->removeTail();
+
+    //Can tail go down a level?
+    dependency* tailDep = manifest->getDependencyById(headQueue->tailId());
+    std::cout << tailDep->totalPrerequisites()-1 << " >= " << tailLevel+1 << "\n";
+    if(tailDep->totalPrerequisites()-1 >= tailLevel+1)
+    {
+      dependency* newTail = manifest->getDependencyById(tailDep->getPrerequisiteIdByPrerquisiteListLevel(tailLevel+1));
+      std::cout << newTail->getName() << "\n";
+      keep_consuming = false;
+    }
+  }
+
+  printQueue(headQueue->printOrder(), manifest);
 
   return 0;
 }

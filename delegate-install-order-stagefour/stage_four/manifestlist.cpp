@@ -26,6 +26,7 @@ void manifestList::stepone_convertManifestTextToObjects()
     while(dependencyName.empty() == false)
     {
       dependency* dep = new dependency(); dep->initialize(nextAvailableUniqueId, dependencyName);
+      //std::cout << dependencyName << "\n";
       dependencies->push_back(dep);
       nextAvailableUniqueId += 1;
 
@@ -41,7 +42,7 @@ void manifestList::steptwo_linkPrerequisitesToTheirRespectiveDependencies()
   for(size_t a = 0; a < dependencies->size(); a++)
   {
     dependency* dep = dependencies->at(a);
-    std::cout << "Dependency " << dep->getName() << "\n";
+    //std::cout << "Dependency " << dep->getName() << "\n";
     textFile* text = new textFile();
     std::string directoryAndFilename = std::string();
     directoryAndFilename.append(directoryOfDependencies);
@@ -53,7 +54,7 @@ void manifestList::steptwo_linkPrerequisitesToTheirRespectiveDependencies()
     {
       std::pair<std::string, bool> nextLinePair = text->getNextLine();
       std::string nextLine = std::get<0>(nextLinePair);
-      std::cout << "  " << nextLine << "\n";
+      //std::cout << "  " << nextLine << "\n";
       bool endOfLine = std::get<1>(nextLinePair);
       if(nextLine.size() > 0)//Has another prerequisite?
       {
@@ -81,13 +82,14 @@ void manifestList::stepthree_determineHeadDependencies()
   while(keep_looping == true)
   {
     std::pair<std::string, bool> nextLinePair = text->getNextLine();
-    (void)(std::get<1>(nextLinePair) == true ? keep_looping = false : false);
     std::string nextLine = std::get<0>(nextLinePair);
+    bool endOfLine = std::get<1>(nextLinePair);
     if(nextLine.size() > 0)
     {
       dependency* nextHeadDependency = this->getDependencyObjectByName(nextLine);
       headDependencyIds->push_back(nextHeadDependency->getId());
     }
+    if(endOfLine == true){ keep_looping = false; }
   }
   delete text;
 }
@@ -118,16 +120,15 @@ dependency* manifestList::getDependencyObjectByName(std::string dependencyName)
   dependency* output = nullptr;
   int index = 0;
   bool dependencyFound = false;
-  for(int a = 0; a < dependencies->size(); a++)
+  for(size_t a = 0; a < dependencies->size(); a++)
   {
-    dependency* suspectDependency = dependencies->at(a);
-    //if(this->stringMatches(suspectDependency->getName(), dependencyName, suspectDependency->getName().size()) == true)
-    if(strncmp(dependencyName.c_str(), suspectDependency->getName().c_str(), strlen(suspectDependency->getName().c_str())) == 0)
+    dependency* suspectDependency = dependencies->at((int)a);
+    if(strncmp(suspectDependency->getName().c_str(), dependencyName.c_str(), suspectDependency->getName().size())  == 0)
     {
       output = suspectDependency;
-      index = a;
+      index = (int)a;
       dependencyFound = true;
-      a = dependencies->size();
+      a = (int)dependencies->size();
     }
   }
 
@@ -138,47 +139,16 @@ dependency* manifestList::getDependencyObjectByName(std::string dependencyName)
   return output;
 }
 
-bool manifestList::stringMatches(std::string string1, std::string string2, size_t finiteLimit)
-{
-  bool output = false;
-
-  char* string1Char = (char*)malloc(2 * sizeof(char)); memset(string1Char, '\0', 2);
-  char* string2Char = (char*)malloc(2 * sizeof(char)); memset(string2Char, '\0', 2);
-  bool matches = true;
-  bool keep_matching = true;
-  size_t charactersConsumed = 0;
-  while(keep_matching == true)
-  {
-    if(charactersConsumed < string1.size() && charactersConsumed < string2.size())
-    {
-      string1Char[0] = string1.at(charactersConsumed);
-      string2Char[0] = string2.at(charactersConsumed);
-      if(strncmp(string1Char, string2Char, 1) != 0)
-      {
-        matches = false;
-        keep_matching = false;
-      }
-    }
-    charactersConsumed += 1;
-    if(charactersConsumed >= finiteLimit)
-    {
-      keep_matching = false;
-    }
-  }
-  free(string1Char); free(string2Char);
-  output = matches;
-  return output;
-}
 
 bool manifestList::previouslyInstalled(int uniqueId)
 {
   bool output = false;
   for(size_t a = 0; a < previouslyVirtuallyInstalled->size(); a++)
   {
-    if(previouslyVirtuallyInstalled->at(a) == uniqueId)
+    if(previouslyVirtuallyInstalled->at((int)a) == uniqueId)
     {
       output = true;
-      a = previouslyVirtuallyInstalled->size();
+      a = (int)previouslyVirtuallyInstalled->size();
     }
   }
   return output;
