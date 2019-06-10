@@ -20,7 +20,6 @@ public:
 private:
   std::vector<int>* uniqueIdOrder;
   std::vector<int>* levelPerDepth;
-
 };
 
 #endif // INSTALLORDER_H

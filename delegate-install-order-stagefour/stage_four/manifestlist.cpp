@@ -41,7 +41,7 @@ void manifestList::steptwo_linkPrerequisitesToTheirRespectiveDependencies()
   for(size_t a = 0; a < dependencies->size(); a++)
   {
     dependency* dep = dependencies->at(a);
-    //std::cout << "Dependency " << dep->getName() << "\n";
+    std::cout << "Dependency " << dep->getName() << "\n";
     textFile* text = new textFile();
     std::string directoryAndFilename = std::string();
     directoryAndFilename.append(directoryOfDependencies);
@@ -52,8 +52,9 @@ void manifestList::steptwo_linkPrerequisitesToTheirRespectiveDependencies()
     while(keep_looping == true)
     {
       std::pair<std::string, bool> nextLinePair = text->getNextLine();
-      (void)(std::get<1>(nextLinePair) == true ? keep_looping = false : false);
       std::string nextLine = std::get<0>(nextLinePair);
+      std::cout << "  " << nextLine << "\n";
+      bool endOfLine = std::get<1>(nextLinePair);
       if(nextLine.size() > 0)//Has another prerequisite?
       {
         dependency* nextPrerequisite = this->getDependencyObjectByName(nextLine);
@@ -63,6 +64,7 @@ void manifestList::steptwo_linkPrerequisitesToTheirRespectiveDependencies()
           dep->appendPrerequisite(nextPrerequisite->getId());
         }else if(nextPrerequisite == nullptr){ std::cout << "prerequisite " << nextLine << " not found during search(by name) as required by " << dep->getName() << "\n"; }
       }
+      if(endOfLine == true){ keep_looping = false; }
     }
     delete text;
   }
@@ -78,9 +80,14 @@ void manifestList::stepthree_determineHeadDependencies()
   bool keep_looping = true;
   while(keep_looping == true)
   {
-    std::pair<std::string, bool> nextLinePair = text->getNextLine(); (void)(std::get<1>(nextLinePair) == true ? keep_looping = false : false); std::string nextLine = std::get<0>(nextLinePair);
-    dependency* nextHeadDependency = this->getDependencyObjectByName(nextLine);
-    headDependencyIds->push_back(nextHeadDependency->getId());
+    std::pair<std::string, bool> nextLinePair = text->getNextLine();
+    (void)(std::get<1>(nextLinePair) == true ? keep_looping = false : false);
+    std::string nextLine = std::get<0>(nextLinePair);
+    if(nextLine.size() > 0)
+    {
+      dependency* nextHeadDependency = this->getDependencyObjectByName(nextLine);
+      headDependencyIds->push_back(nextHeadDependency->getId());
+    }
   }
   delete text;
 }
@@ -109,11 +116,13 @@ dependency* manifestList::getDependencyById(int uniqueId)
 dependency* manifestList::getDependencyObjectByName(std::string dependencyName)
 {
   dependency* output = nullptr;
-  size_t index = 0; bool dependencyFound = false;
-  for(size_t a = 0; a < dependencies->size(); a++)
+  int index = 0;
+  bool dependencyFound = false;
+  for(int a = 0; a < dependencies->size(); a++)
   {
     dependency* suspectDependency = dependencies->at(a);
-    if(this->stringMatches(suspectDependency->getName(), dependencyName, suspectDependency->getName().size()) == true)
+    //if(this->stringMatches(suspectDependency->getName(), dependencyName, suspectDependency->getName().size()) == true)
+    if(strncmp(dependencyName.c_str(), suspectDependency->getName().c_str(), strlen(suspectDependency->getName().c_str())) == 0)
     {
       output = suspectDependency;
       index = a;
@@ -142,25 +151,19 @@ bool manifestList::stringMatches(std::string string1, std::string string2, size_
   {
     if(charactersConsumed < string1.size() && charactersConsumed < string2.size())
     {
-
-      if(charactersConsumed < finiteLimit)
+      string1Char[0] = string1.at(charactersConsumed);
+      string2Char[0] = string2.at(charactersConsumed);
+      if(strncmp(string1Char, string2Char, 1) != 0)
       {
-        string1Char[0] = string1.at(charactersConsumed);
-        string2Char[0] = string2.at(charactersConsumed);
-        if(strncmp(string1Char, string2Char, 1) != 0)
-        {
-          matches = false;
-          keep_matching = false;
-        }
+        matches = false;
+        keep_matching = false;
       }
-    }else{ keep_matching = false; }
-
+    }
     charactersConsumed += 1;
     if(charactersConsumed >= finiteLimit)
     {
       keep_matching = false;
     }
-
   }
   free(string1Char); free(string2Char);
   output = matches;

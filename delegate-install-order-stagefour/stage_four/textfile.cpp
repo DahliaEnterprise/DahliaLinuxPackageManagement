@@ -41,6 +41,7 @@ std::pair<std::string, bool> textFile::getNextLine()
     if(totalCharactersConsumed >= totalCharactersExpected){ keep_looping = false;/*infinite loop prevention*/ }
   }
   bool endOfFileReached = false;
+  //std::cout << outputString << "\n";
   if(file->tellg() >= totalCharactersExpected){ endOfFileReached = true; }
   output = std::make_pair(outputString, endOfFileReached);
   free(nextLineChar);
