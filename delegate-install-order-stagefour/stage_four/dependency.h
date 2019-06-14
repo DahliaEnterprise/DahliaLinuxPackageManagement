@@ -19,6 +19,7 @@ public:
 
   void printPrerequisites();
   void setDownloadSourceFilename(std::string setDSFilename);
+  std::string getDownloadSourceFilename();
   void setAptName(std::string setAptgetName);
   std::string getAptgetName();
 

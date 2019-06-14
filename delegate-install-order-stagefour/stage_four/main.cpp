@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
   std::vector<int>* installationOrderById = new std::vector<int>();
   installOrder* headQueue = new installOrder();
   headQueue->initalize();
-  headQueue->appendId(manifest->getDependencyByHeadIndex(0)->getId(), 0);
+  headQueue->appendId(manifest->getDependencyByHeadIndex(4)->getId(), 0);
 
   bool keep_generating = true;
   while(keep_generating == true)
@@ -65,12 +65,12 @@ int main(int argc, char *argv[])
   }
   //std::cout << manifest->getDependencyById(headQueue->tailId())->getName() << "\n";
   //std::cout << "\n\n" << installationOrder << "\n\n";
-  std::cout << "apt-get install ";
+  //std::cout << "apt-get install ";
   for(size_t a = 0; a < installationOrderById->size(); a++)
   {
-    std::cout << manifest->getDependencyById(installationOrderById->at(a))->getAptgetName() << " ";
+    std::cout << "dpkg -i ./" << manifest->getDependencyById(installationOrderById->at(a))->getDownloadSourceFilename() << ";";
   }
-
+  std::cout << "\n\n";
   return 0;
 }
 

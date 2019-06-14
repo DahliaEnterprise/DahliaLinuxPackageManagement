@@ -56,6 +56,8 @@ void dependency::setDownloadSourceFilename(std::string setDSFilename)
   downloadSourceFilename.append(setDSFilename);
 }
 
+std::string dependency::getDownloadSourceFilename(){ return downloadSourceFilename; }
+
 void dependency::setAptName(std::string setAptgetName)
 {
   aptgetName.append(setAptgetName);
