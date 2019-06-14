@@ -1,1 +1,2 @@
 http://http.us.debian.org/debian/pool/main/d/dpkg/dpkg-dev_1.18.25_all.deb
+dpgk-dev

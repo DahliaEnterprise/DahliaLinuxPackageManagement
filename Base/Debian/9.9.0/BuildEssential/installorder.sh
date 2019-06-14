@@ -1,0 +1,1 @@
+apt-get install gcc-6-base libgcc1 libc6 zlib1g binutils libc6 bzip2 liblzma5 multiarch-support libpcre3 libselinux1 libattr1 libacl1 tar dpkg libdb5.3 libgdbm3 perl-base perl-modules libperl5.24 perl libdpkg-perl make patch xz-utils dpgk-dev

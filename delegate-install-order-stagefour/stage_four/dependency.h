@@ -19,11 +19,14 @@ public:
 
   void printPrerequisites();
   void setDownloadSourceFilename(std::string setDSFilename);
+  void setAptName(std::string setAptgetName);
+  std::string getAptgetName();
 
 private:
   int uniqueId;
   std::string name;
   std::string downloadSourceFilename;
+  std::string aptgetName;
   std::vector<int>* prerequisiteIds;
 };
 

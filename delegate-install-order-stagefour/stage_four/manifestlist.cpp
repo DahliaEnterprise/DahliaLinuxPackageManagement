@@ -138,6 +138,13 @@ void manifestList::stepfour_determineDownloadFilenames()
     {
       dep->setDownloadSourceFilename(dependencyDownloadFilename);
     }
+
+    nextLinePair = text->getNextLine();
+    if(nextLine.size() > 0)
+    {
+      std::string aptGetName = std::get<0>(nextLinePair);
+      dep->setAptName(aptGetName);
+    }
   }
 }
 

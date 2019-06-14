@@ -16,6 +16,7 @@ int main(int argc, char *argv[])
 
   /** Begin Generation **/
   std::string installationOrder = "";
+  std::vector<int>* installationOrderById = new std::vector<int>();
   installOrder* headQueue = new installOrder();
   headQueue->initalize();
   headQueue->appendId(manifest->getDependencyByHeadIndex(0)->getId(), 0);
@@ -50,6 +51,10 @@ int main(int argc, char *argv[])
       std::cout << manifest->getDependencyById(headQueue->tailId())->getName() << "\n";
       installationOrder.append(manifest->getDependencyById(headQueue->tailId())->getName());
       installationOrder.append("\n");
+      if(manifest->previouslyInstalled(headQueue->tailId()) == false)
+      {
+        installationOrderById->push_back(headQueue->tailId());
+      }
       manifest->appendVirtuallyInstalled(headQueue->tailId());
       headQueue->removeTail();
       if(headQueue->totalDepths() <= 0)
@@ -59,7 +64,13 @@ int main(int argc, char *argv[])
     }
   }
   //std::cout << manifest->getDependencyById(headQueue->tailId())->getName() << "\n";
-  std::cout << "\n\n" << installationOrder << "\n\n";
+  //std::cout << "\n\n" << installationOrder << "\n\n";
+  std::cout << "apt-get install ";
+  for(size_t a = 0; a < installationOrderById->size(); a++)
+  {
+    std::cout << manifest->getDependencyById(installationOrderById->at(a))->getAptgetName() << " ";
+  }
+
   return 0;
 }
 
