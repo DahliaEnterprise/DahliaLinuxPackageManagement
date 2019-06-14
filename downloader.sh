@@ -1,8 +1,10 @@
 #!/bin/bash
+workingDir=`pwd`
+downloadSourceDirectoryLocation="/Base/Debian/9.9.0/BuildEssential/amd64/DownloadSource/*"
+wholeDownloadSourceDirLocation=$workingDir$downloadSourceDirectoryLocation
 
-downloadSourceDirectoryLocation="/home/dahlia/Downloads/DahliaLinuxPackageManagement/Base/Debian/9.9.0/BuildEssential/amd64/DownloadSource/*"
 
-for file in $downloadSourceDirectoryLocation
+for file in $wholeDownloadSourceDirLocation
 do
 	#.downloadsource text file location
 	#echo $file
