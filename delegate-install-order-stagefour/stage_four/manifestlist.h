@@ -8,6 +8,7 @@
 #include "textfile.cpp"
 #include <tuple>
 #include "installorder.cpp"
+#include <string>
 
 class manifestList
 {
@@ -18,6 +19,7 @@ public:
   void stepone_convertManifestTextToObjects();
   void steptwo_linkPrerequisitesToTheirRespectiveDependencies();
   void stepthree_determineHeadDependencies();
+  void stepfour_determineDownloadFilenames();
   dependency* getDependencyByHeadIndex(int index);
   dependency* getDependencyById(int uniqueId);
 

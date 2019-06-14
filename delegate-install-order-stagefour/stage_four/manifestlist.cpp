@@ -94,6 +94,53 @@ void manifestList::stepthree_determineHeadDependencies()
   delete text;
 }
 
+void manifestList::stepfour_determineDownloadFilenames()
+{
+  std::string downloadSourceDirectory = std::string();
+  downloadSourceDirectory.append(directoryOfDependencies);
+  downloadSourceDirectory.append(std::string("DownloadSource/"));
+  for(size_t a = 0; a < dependencies->size(); a++)
+  {
+    dependency* dep = dependencies->at(a);
+    std::string dependencyDownloadFilename = std::string();
+    std::string downloadSourceTextFileLocation = std::string();
+    downloadSourceTextFileLocation.append(downloadSourceDirectory);
+    downloadSourceTextFileLocation.append(dep->getName());
+    downloadSourceTextFileLocation.append(std::string(".downloadsource.txt"));
+    textFile* text = new textFile();
+    text->openTextFile(downloadSourceTextFileLocation);
+    std::pair<std::string, bool> nextLinePair = text->getNextLine();
+    std::string nextLine = std::get<0>(nextLinePair);
+    if(nextLine.size() > 0)
+    {
+      int filenameStartsAtIndex = -1;
+      for(int a = nextLine.size()-1; a > 0; a--)
+      {
+        char c = nextLine.at(a);
+        std::string character = std::string();character.append(1, c);
+        if(character.compare("/") == 0)
+        {
+          filenameStartsAtIndex = a;
+          a = 0;
+        }
+      }
+
+      if(filenameStartsAtIndex > 0)
+      {
+        for(int a = filenameStartsAtIndex+1; a < (int)nextLine.size(); a++)
+        {
+          dependencyDownloadFilename.append(1, nextLine.at(a) );
+        }
+      }
+    }else{ std::cout << "failed to open download source .txt file " << dep->getName() << "\n"; }
+
+    if(dependencyDownloadFilename.size() > 0)
+    {
+      dep->setDownloadSourceFilename(dependencyDownloadFilename);
+    }
+  }
+}
+
 dependency* manifestList::getDependencyByHeadIndex(int index)
 {
   return this->getDependencyById(headDependencyIds->at(index));

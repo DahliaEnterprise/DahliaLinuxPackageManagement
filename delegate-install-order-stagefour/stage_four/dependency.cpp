@@ -50,4 +50,9 @@ void dependency::printPrerequisites()
     std::cout << prerequisiteIds->at(a) << "\n";
   }
 }
+
+void dependency::setDownloadSourceFilename(std::string setDSFilename)
+{
+  downloadSourceFilename.append(setDSFilename);
+}
 #endif

@@ -18,11 +18,12 @@ public:
   std::string getName();
 
   void printPrerequisites();
+  void setDownloadSourceFilename(std::string setDSFilename);
 
 private:
   int uniqueId;
   std::string name;
-
+  std::string downloadSourceFilename;
   std::vector<int>* prerequisiteIds;
 };
 
