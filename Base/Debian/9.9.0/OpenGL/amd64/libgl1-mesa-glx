@@ -1,0 +1,17 @@
+libc6
+libdrm2
+libexpat1
+libglapi-mesa
+libx11-6
+libx11-xcb1
+libxcb-dri2-0
+libxcb-dri3-0
+libxcb-glx0
+libxcb-present0
+libxcb-sync1
+libxcb1
+libxdamage1
+libxext6
+libxfixes3
+libxshmfence1
+libxxf86vm1

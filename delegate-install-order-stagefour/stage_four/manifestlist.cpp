@@ -76,7 +76,8 @@ void manifestList::stepthree_determineHeadDependencies()
   textFile* text = new textFile();
   std::string directoryAndFilename = std::string();
   directoryAndFilename.append(directoryOfDependencies);
-  directoryAndFilename.append("BuildEssential_amd64.txt");
+  directoryAndFilename.append(packageHeadTextFilename);
+  directoryAndFilename.append(".txt");
   text->openTextFile(directoryAndFilename);
   bool keep_looping = true;
   while(keep_looping == true)

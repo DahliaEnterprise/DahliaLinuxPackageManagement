@@ -1,0 +1,3 @@
+libgl1-mesa-dev
+libglew2.1
+libglu1-mesa-dev

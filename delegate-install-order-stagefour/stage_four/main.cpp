@@ -8,7 +8,7 @@ int main(int argc, char *argv[])
 {
   /** Load Dependency and Prereuqisite Information into Program **/
   manifestList* manifest = new manifestList();
-  manifest->initialize(std::string("/home/dahlia/Downloads/DahliaLinuxPackageManagement/Base/Debian/9.9.0/BuildEssential/amd64/"), std::string("BuildEssential_amd64"));
+  manifest->initialize(std::string("/home/dahlia/Downloads/DahliaLinuxPackageManagement/Base/Debian/9.9.0/OpenGL/amd64/"), std::string("OpenGL_amd64"));
   manifest->stepone_convertManifestTextToObjects();
   manifest->steptwo_linkPrerequisitesToTheirRespectiveDependencies();
   manifest->stepthree_determineHeadDependencies();
@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
   std::vector<int>* installationOrderById = new std::vector<int>();
   installOrder* headQueue = new installOrder();
   headQueue->initalize();
-  headQueue->appendId(manifest->getDependencyByHeadIndex(4)->getId(), 0);
+  headQueue->appendId(manifest->getDependencyByHeadIndex(0)->getId(), 0);
 
   bool keep_generating = true;
   while(keep_generating == true)

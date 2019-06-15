@@ -1,0 +1,3 @@
+libc6
+libgl1-mesa-glx
+libx11-6
