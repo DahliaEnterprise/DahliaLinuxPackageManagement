@@ -1,0 +1,9 @@
+libdrm-amdgpu1
+libdrm-exynos1
+libdrm-freedreno1
+ibdrm-intel1
+libdrm-nouveau2
+libdrm-omap1
+libdrm-radeon1
+libdrm-tegra0
+libdrm2

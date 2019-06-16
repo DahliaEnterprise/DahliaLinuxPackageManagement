@@ -1,0 +1,4 @@
+libx11-dev
+libxdamage1
+libxfixes-dev
+x11proto-damage-dev

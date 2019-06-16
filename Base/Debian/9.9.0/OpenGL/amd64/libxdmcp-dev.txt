@@ -1,0 +1,2 @@
+libxdmcp6
+x11proto-core-dev

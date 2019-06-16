@@ -19,9 +19,11 @@ int main(int argc, char *argv[])
   std::vector<int>* installationOrderById = new std::vector<int>();
   installOrder* headQueue = new installOrder();
   headQueue->initalize();
-  headQueue->appendId(manifest->getDependencyByHeadIndex(0)->getId(), 0);
-
+  headQueue->appendId(manifest->getDependencyByHeadIndex(2)->getId(), 0);
+  std::cout << "HEADER:" << manifest->getDependencyById(manifest->getDependencyByHeadIndex(1)->getId())->getName() << "\n";
+ //std::cout << manifest->getDependencyById(headQueue->tailId())->getName() << "\n";
   bool keep_generating = true;
+  int iterations = 0;
   while(keep_generating == true)
   {
     //Went deeper? (if goes deeper we want to loop while back around to going deeper until stops)
@@ -42,6 +44,7 @@ int main(int argc, char *argv[])
             a = totalPrerequisites;//stop for(a) loop
           }
         }
+        iterations += 1;
       }
     }
 
@@ -49,6 +52,7 @@ int main(int argc, char *argv[])
     {
       //Max depth found
       std::cout << manifest->getDependencyById(headQueue->tailId())->getName() << "\n";
+      //printQueue(headQueue->printOrder(), manifest);
       installationOrder.append(manifest->getDependencyById(headQueue->tailId())->getName());
       installationOrder.append("\n");
       if(manifest->previouslyInstalled(headQueue->tailId()) == false)
@@ -62,13 +66,15 @@ int main(int argc, char *argv[])
         keep_generating = false;
       }
     }
+    iterations += 1;
   }
+  std::cout << iterations << "\n";
   //std::cout << manifest->getDependencyById(headQueue->tailId())->getName() << "\n";
   //std::cout << "\n\n" << installationOrder << "\n\n";
-  //std::cout << "apt-get install ";
+  std::cout << "apt-get install ";
   for(size_t a = 0; a < installationOrderById->size(); a++)
   {
-    std::cout << "dpkg -i ./" << manifest->getDependencyById(installationOrderById->at(a))->getDownloadSourceFilename() << ";";
+    std::cout << "" << manifest->getDependencyById(installationOrderById->at(a))->getName() << " ";
   }
   std::cout << "\n\n";
   return 0;

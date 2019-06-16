@@ -1,0 +1,2 @@
+libxcb-dri2-0
+libxcb1-dev

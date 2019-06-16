@@ -1,0 +1,3 @@
+libc6
+libdrm2
+libpciaccess0

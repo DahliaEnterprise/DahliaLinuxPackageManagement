@@ -1,0 +1,4 @@
+libxcb-render0-dev
+libxcb-shape0-dev
+libxcb-xfixes0
+libxcb1-dev

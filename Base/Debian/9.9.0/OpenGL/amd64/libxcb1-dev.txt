@@ -1,0 +1,4 @@
+libpthread-stubs0-dev
+libxau-dev
+libxcb1
+libxdmcp-dev

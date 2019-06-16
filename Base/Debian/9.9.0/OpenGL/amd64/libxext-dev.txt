@@ -1,0 +1,4 @@
+libx11-dev
+libxext6
+x11proto-core-dev
+x11proto-xext-dev

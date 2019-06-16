@@ -1,0 +1,4 @@
+libc6
+libgcc1
+libgl1-mesa-glx
+libstdc++6

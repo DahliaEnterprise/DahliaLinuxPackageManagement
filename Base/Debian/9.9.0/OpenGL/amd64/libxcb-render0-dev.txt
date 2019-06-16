@@ -1,0 +1,2 @@
+libxcb-render0
+libxcb1-dev

@@ -1,0 +1,8 @@
+libx11-6
+libxau-dev
+libxcb1-dev
+libxdmcp-dev
+x11proto-core-dev
+x11proto-input-dev
+x11proto-kb-dev
+xtrans-dev

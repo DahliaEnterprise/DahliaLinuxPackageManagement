@@ -84,10 +84,12 @@ void manifestList::stepthree_determineHeadDependencies()
   {
     std::pair<std::string, bool> nextLinePair = text->getNextLine();
     std::string nextLine = std::get<0>(nextLinePair);
+    std::cout << "pre adding head dep:" << nextLine << "\n";
     bool endOfLine = std::get<1>(nextLinePair);
     if(nextLine.size() > 0)
     {
       dependency* nextHeadDependency = this->getDependencyObjectByName(nextLine);
+      std::cout << "adding head dep:" << nextHeadDependency->getName() << "\n";
       headDependencyIds->push_back(nextHeadDependency->getId());
     }
     if(endOfLine == true){ keep_looping = false; }

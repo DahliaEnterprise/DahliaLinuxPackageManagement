@@ -1,0 +1,3 @@
+libx11-dev
+libxxf86vm1
+x11proto-xf86vidmode-dev
